@@ -28,6 +28,7 @@ angular
       $ionicActionSheet,
       $ionicPopover,
       $ionicModal,
+      $stateParams,
       $rootScope,
       KVStore,
       ionicDatePicker,

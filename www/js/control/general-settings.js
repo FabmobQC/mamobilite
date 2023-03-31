@@ -410,7 +410,7 @@ angular
         $scope.getConnectURL();
         $scope.getCollectionSettings();
         $scope.getSyncSettings();
-        $scope.getOpCode();
+        $scope.getOPCode();
         $scope
           .getState()
           .then($scope.isTrackingOn)

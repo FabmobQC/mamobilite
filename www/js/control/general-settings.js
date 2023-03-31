@@ -6,11 +6,9 @@ angular
     "emission.i18n.utils",
     "emission.main.control.collection",
     "emission.main.control.sync",
-    "emission.main.control.tnotify",
     "ionic-datepicker",
     "ionic-datepicker.provider",
     "emission.splash.startprefs",
-    "emission.splash.updatecheck",
     "emission.main.metrics.factory",
     "emission.stats.clientstats",
     "emission.plugin.kvstore",
@@ -39,9 +37,7 @@ angular
       UploadHelper,
       ControlCollectionHelper,
       ControlSyncHelper,
-      ControlTransitionNotifyHelper,
       CarbonDatasetHelper,
-      UpdateCheck,
       i18nUtils,
       CalorieCal,
       ClientStats,
@@ -129,6 +125,18 @@ angular
         }
       };
 
+      $scope.viewQRCode = function($event) {
+        $scope.tokenURL = "emission://login_token?token="+$scope.settings.auth.opcode;
+        if ($scope.qrp) {
+          $scope.qrp.show($event);
+      } else {
+          $ionicPopover.fromTemplateUrl("templates/control/qrc.html", {scope: $scope}).then((q) => {
+              $scope.qrp = q;
+              $scope.qrp.show($event);
+          }).catch((err) => Logger.displayError("Error while displaying QR Code", err));
+      }
+  }
+
       $scope.fixAppStatus = function() {
           $scope.$broadcast("recomputeAppStatus");
           $scope.appStatusModal.show();
@@ -144,7 +152,7 @@ angular
       $scope.deleteMyData = function ($event) {
 
         const email = UserCacheHelper.getEmail() || "";
-        const token = $scope.settings.auth.email;
+        const token = $scope.settings.auth.opcode;
 
         const parameters = {
           "en": {
@@ -251,7 +259,7 @@ angular
             });
           },
           function (error) {
-            console.log("While getting connect Url :" + error);
+            Logger.displayError("While getting connect url", error);
           }
         );
       };
@@ -274,33 +282,22 @@ angular
         });
       };
 
-      $scope.getTNotifySettings = function () {
-        ControlTransitionNotifyHelper.getTNotifySettings().then(function (
-          showConfig
-        ) {
-          $scope.$apply(function () {
-            $scope.settings.tnotify.show_config = showConfig;
+      $scope.getOPCode = function() {
+        ControlHelper.getOPCode().then(function(opcode) {
+          console.log("opcode = "+opcode);
+          $scope.$apply(function() {
+            if (opcode == null) {
+              $scope.settings.auth.opcode = "Not logged in";
+            } else {
+              $scope.settings.auth.opcode = opcode;
+            }
           });
+        }, function(error) {
+            $ionicPopup.alert("while getting email, "+error);
+            Logger.displayError("while getting opcode, ",error);
         });
-      };
+      }
 
-      $scope.getEmail = function () {
-        ControlHelper.getUserEmail().then(
-          function (response) {
-            console.log("user email = " + response);
-            $scope.$apply(function () {
-              if (response == null) {
-                $scope.settings.auth.email = "Not logged in";
-              } else {
-                $scope.settings.auth.email = response;
-              }
-            });
-          },
-          function (error) {
-            $ionicPopup.alert("while getting email, " + error);
-          }
-        );
-      };
       $scope.showLog = function () {
         $state.go("root.main.log");
       };
@@ -319,7 +316,7 @@ angular
             return response;
           },
           function (error) {
-            $ionicPopup.alert("while getting current state, " + error);
+            Logger.displayError("while getting current state", error);
           }
         );
       };
@@ -340,7 +337,7 @@ angular
                 },
                 function (error) {
                   $scope.$apply(function () {
-                    $ionicPopup.alert({ template: "error -> " + error });
+                    Logger.displayError("while clearing user cache, error ->", error);
                   });
                 }
               );
@@ -375,38 +372,6 @@ angular
         });
       };
 
-      $scope.testTripEndNotify = function () {
-        $ionicPopup.alert({
-          template: "test for local notification 0.9.0-beta.3+ only",
-        });
-        /*
-        var testCfg = {
-            id: 737678,
-            title: $translate.instant('post-trip-prompt.notification-title'),
-            text: "Testing if this works",
-            icon: 'file://img/icon.png',
-            actions: "TRIP_CONFIRM"
-        };
-        $window.cordova.plugins.notification.local.addActions('TRIP_CONFIRM', [{
-            id: 'MUTE',
-            type: 'button',
-            title: 'Mute',
-            ui: 'decline'
-        },{
-            id: 'SNOOZE',
-            type: 'button',
-            title: 'Snooze',
-            launch: true
-        },{
-            id: 'CHOOSE',
-            type: 'button',
-            title: "Choose",
-            launch: true
-        }]);
-        $window.cordova.plugins.notification.local.schedule(testCfg);
-        */
-      };
-
       $scope.invalidateCache = function () {
         window.cordova.plugins.BEMUserCache.invalidateAllCache().then(
           function (result) {
@@ -415,9 +380,7 @@ angular
             });
           },
           function (error) {
-            $scope.$apply(function () {
-              $ionicPopup.alert({ template: "error -> " + error });
-            });
+            Logger.displayError("while invalidating cache, error->", error);
           }
         );
       };
@@ -442,24 +405,12 @@ angular
         $scope.settings = {};
         $scope.settings.collect = {};
         $scope.settings.sync = {};
-        $scope.settings.tnotify = {};
         $scope.settings.auth = {};
         $scope.settings.connect = {};
-        $scope.settings.channel = function (newName) {
-          return arguments.length
-            ? UpdateCheck.setChannel(newName)
-            : $scope.settings.storedChannel;
-        };
-        UpdateCheck.getChannel().then(function (retVal) {
-          $scope.$apply(function () {
-            $scope.settings.storedChannel = retVal;
-          });
-        });
         $scope.getConnectURL();
         $scope.getCollectionSettings();
         $scope.getSyncSettings();
-        $scope.getTNotifySettings();
-        $scope.getEmail();
+        $scope.getOpCode();
         $scope
           .getState()
           .then($scope.isTrackingOn)
@@ -615,7 +566,6 @@ angular
       $scope.forceState = ControlCollectionHelper.forceState;
       $scope.editCollectionConfig = ControlCollectionHelper.editConfig;
       $scope.editSyncConfig = ControlSyncHelper.editConfig;
-      $scope.editTNotifyConfig = ControlTransitionNotifyHelper.editConfig;
 
       $scope.isAndroid = function () {
         return ionic.Platform.isAndroid();
@@ -715,9 +665,6 @@ angular
       };
       $scope.userDataExpanded = function () {
         return $scope.dataExpanded && $scope.userDataSaved();
-      };
-      $scope.checkUpdates = function () {
-        UpdateCheck.checkForUpdates();
       };
 
       var handleNoConsent = function (resultDoc) {

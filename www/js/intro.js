@@ -3,7 +3,6 @@
 angular
   .module("emission.intro", [
     "emission.splash.startprefs",
-    "emission.splash.updatecheck",
     'emission.appstatus.permissioncheck',
     "emission.i18n.utils",
     'emission.config.dynamic',
@@ -42,7 +41,6 @@ angular
       CommHelper,
       StartPrefs,
       SurveyLaunch,
-      UpdateCheck,
       $translate,
       i18nUtils,
       DynamicConfig,
@@ -286,24 +284,14 @@ angular
       };
 
       $scope.login = function (token) {
-        window.cordova.plugins.BEMJWTAuth.setPromptedAuthToken(token).then(
-          function (userEmail) {
+        window.cordova.plugins.OPCodeAuth.setOPCode(token).then(function(opcode) {
             // ionicToast.show(message, position, stick, time);
             // $scope.next();
-            ionicToast.show(userEmail, "middle", false, 2500);
-            if (userEmail == "null" || userEmail == "") {
-              $scope.alertError("Invalid login " + userEmail);
+            ionicToast.show(opcode, 'middle', false, 2500);
+            if (opcode == "null" || opcode == "") {
+              $scope.alertError("Invalid login "+opcode);
             } else {
-              CommHelper.registerUser(
-                function (successResult) {
-                  UpdateCheck.getChannel().then(function (retVal) {
-                    CommHelper.updateUser({
-                      client: retVal,
-                      creation_ts: new moment(),
-                      project_id: $scope.selectedStudy.id,
-                      email: $scope.email, // we might want not to have email on e-mission-server in order to anonymize data
-                    });
-                  });
+              CommHelper.registerUser(function (successResult) {
                   if (!$scope.selectedStudy.user_email_mandatory) {
                     $scope.startSurvey();
                   }

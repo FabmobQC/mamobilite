@@ -291,7 +291,13 @@ angular
             if (opcode == "null" || opcode == "") {
               $scope.alertError("Invalid login "+opcode);
             } else {
-              CommHelper.registerUser(function (successResult) {
+              CommHelper.registerUser(
+                function (successResult) {
+                  CommHelper.updateUser({
+                    creation_ts: new moment(),
+                    project_id: $scope.selectedStudy.id,
+                    email: $scope.email, // we might want not to have email on e-mission-server in order to anonymize data
+                  });
                   if (!$scope.selectedStudy.user_email_mandatory) {
                     $scope.startSurvey();
                   }

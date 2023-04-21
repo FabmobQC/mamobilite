@@ -9,7 +9,7 @@
 
 body.platform-ios {
   padding-top: calc(env(safe-area-inset-top) / 2);
-  margin: 0 10px 0 0;
+  margin: 0 20px 0 0;
 }
 
 .platform-ios .view-container {

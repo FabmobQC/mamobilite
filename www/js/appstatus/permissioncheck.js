@@ -3,7 +3,7 @@
  */
 
 angular.module('emission.appstatus.permissioncheck',
-    ['emission.i18n.utils',])
+    [])
 .directive('permissioncheck', function() {
     return {
         scope: {
@@ -345,7 +345,7 @@ controller("PermissionCheckControl", function($scope, $element, $attrs,
         }
         let unusedAppsUnrestrictedCheck = {
             name: $translate.instant("intro.appstatus.unusedapprestrict.name"),
-            desc: $translate.instant("androidUnusedDescTag"),
+            desc: $translate.instant(androidUnusedDescTag),
             fix: fixPerms,
             refresh: checkPerms
         }

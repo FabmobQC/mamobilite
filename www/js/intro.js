@@ -46,55 +46,6 @@ angular
       DynamicConfig,
       UserCacheHelper,
     ) {
-      $scope.setupPermissionText = function () {
-        $scope.platform = $window.device.platform;
-        $scope.osver = $window.device.version.split(".")[0];
-        if ($scope.platform.toLowerCase() == "android") {
-          if ($scope.osver < 6) {
-            $scope.locationPermExplanation = $translate.instant(
-              "intro.permissions.locationPermExplanation-android-lt-6"
-            );
-          } else if ($scope.osver < 10) {
-            $scope.locationPermExplanation = $translate.instant(
-              "intro.permissions.locationPermExplanation-android-6-9"
-            );
-          } else if ($scope.osver < 11) {
-            $scope.locationPermExplanation = $translate.instant(
-              "intro.permissions.locationPermExplanation-android-10"
-            );
-          } else {
-            $scope.locationPermExplanation = $translate.instant(
-              "intro.permissions.locationPermExplanation-android-gte-11"
-            );
-          }
-        }
-
-        if ($scope.platform.toLowerCase() == "ios") {
-          if ($scope.osver < 13) {
-            $scope.locationPermExplanation = $translate.instant(
-              "intro.permissions.locationPermExplanation-ios-lt-13"
-            );
-          } else {
-            $scope.locationPermExplanation = $translate.instant(
-              "intro.permissions.locationPermExplanation-ios-gte-13"
-            );
-          }
-        }
-
-        $scope.backgroundRestricted = false;
-        if ($window.device.manufacturer.toLowerCase() == "samsung") {
-          $scope.backgroundRestricted = true;
-          $scope.allowBackgroundInstructions = $translate.instant(
-            "intro.allow_background.samsung"
-          );
-        }
-
-        $scope.fitnessPermNeeded =
-          $scope.platform.toLowerCase() == "ios" ||
-          ($scope.platform.toLowerCase() == "android" && $scope.osver >= 10);
-
-        console.log("Explanation = " + $scope.locationPermExplanation);
-      };
 
       var allIntroFiles = Promise.all([
         i18nUtils.geti18nFileName("templates/", "intro/summary", ".html"),
@@ -362,8 +313,8 @@ angular
         });
       };
 
-      $ionicPlatform.ready().then(function () {
-        $scope.setupPermissionText();
+      $ionicPlatform.ready().then(function() {
+        console.log("app is launched, currently NOP");
       });
       
 

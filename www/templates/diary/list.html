@@ -120,6 +120,8 @@
                   <button class="diary-button" ng-click ="openPopover($event, tripgj, input.name)">
                     <span translate>
                       {{
+                        tripgj.userInput[input.name].text
+                        ||
                         tripgj.userInput[input.name].texts[currentLanguage]
                         ||
                         tripgj.userInput[input.name].texts["en"]
@@ -142,4 +144,6 @@
       </div>
 		</ion-list>    
 	</ion-content>
+
+
 </ion-view>

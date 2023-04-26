@@ -486,7 +486,7 @@ angular.module('emission.main.diary.list',['ui-leaflet',
       const language = $translate.use();
       $scope.inputParams[inputType].options.forEach( (item) => {
         options.push( {
-          "text": item.texts[language] || item.texts?.["en"],
+          "text": item.texts?.[language] || item.texts?.["en"] || item.text,
           "value": item.value,
         });
       })

@@ -321,12 +321,10 @@ angular.module('emission.main.diary.list',['ui-leaflet',
     */
 
     $scope.refresh = function() {
-      if ($ionicScrollDelegate.getScrollPosition().top < 20) {
-       readAndUpdateForDay(Timeline.data.currDay);
-       $scope.setSurvey();
-       $scope.currentLanguage = $translate.use();
-       $scope.$broadcast('invalidateSize');
-      }
+      readAndUpdateForDay(Timeline.data.currDay);
+      $scope.setSurvey();
+      $scope.currentLanguage = $translate.use();
+      $scope.$broadcast('invalidateSize');
     };
 
     /* For UI control */

@@ -478,6 +478,10 @@ img.center {
   background-image: none !important;
 }
 
+.platform-ios .bar.bar-header {
+  margin-top: 20px !important;
+}
+
 .list .item.item-accordion {
   line-height: 38px;
   padding-top: 0;

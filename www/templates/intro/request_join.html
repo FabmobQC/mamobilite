@@ -8,7 +8,7 @@
                 ng-click="selectStudy(study)"
                 ng-style="study.id === selectedStudy.id && {'background-color': '#387ff5', color: 'white'}"
             >
-                {{study.name_fr}}
+                {{study[name_field]}}
             </ion-item>
         </ion-list>
         <button 

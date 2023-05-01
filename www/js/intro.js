@@ -351,5 +351,7 @@ angular
           }
         })
       }
+
+      $scope.name_field = `name_${$translate.use() === 'fr' || 'en'}`;
     }
 );

@@ -1246,3 +1246,12 @@ span.rz-bar-wrapper {
 .platform-android .action-sheet-option {
   padding-left: 16px;
 }
+
+/*
+  Fix mode and purpose lists being unscrollable when too long
+  https://forum.ionicframework.com/t/scrollable-ionic-action-sheet/15301/5
+*/
+.action-sheet-group {
+  overflow-y: scroll;
+  max-height: 400px;
+}

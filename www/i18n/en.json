@@ -392,7 +392,7 @@
         "join": {
             "cancel": "Cancel",
             "confirm": "Confirm",
-            "enter-email": "Enter the email address you received the survey instructions on",
+            "enter-email": "Enter your email address you received the survey instructions on",
             "repeat-email": "Repeat email",
             "what-project": "What project are you participating in?"
         }

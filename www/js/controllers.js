@@ -4,7 +4,7 @@ angular.module('emission.controllers', ['emission.splash.startprefs',
                                         'emission.splash.pushnotify',
                                         'emission.splash.storedevicesettings',
                                         'emission.splash.localnotify',
-                                        'emission.survey.launch',
+                                        'emission.survey.external.launch',
                                         'emission.stats.clientstats'])
 
 .controller('RootCtrl', function($scope) {})

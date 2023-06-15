@@ -13,7 +13,7 @@ angular
     "emission.stats.clientstats",
     "emission.plugin.kvstore",
     "emission.plugin.logger",
-    "emission.survey.launch",
+    "emission.survey.external.launch",
   ])
 
   .controller(

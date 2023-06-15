@@ -9,7 +9,7 @@
  */
 
 angular.module('emission.main.diary.infscrollfilters',[
-    'emission.tripconfirm.services',
+    'emission.survey.multilabel.services',
     'emission.stats.clientstats',
     'emission.plugin.logger'
   ])

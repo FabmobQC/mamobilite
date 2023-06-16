@@ -6,10 +6,11 @@
  */
 
 angular.module('emission.splash.localnotify', ['emission.plugin.logger',
-                                              'emission.splash.startprefs',
-                                              'emission.services'])
+                                              'emission.services',
+                                              'emission.splash.startprefs'])
 .factory('LocalNotify', function($window, $ionicPlatform, $ionicPopup,
-    $state, $rootScope, Logger, $translate, UserCacheHelper) {
+    $translate, UserCacheHelper,
+    $state, $rootScope, Logger) {
   var localNotify = {};
 
   /*
@@ -143,6 +144,8 @@ angular.module('emission.splash.localnotify', ['emission.plugin.logger',
 
   $ionicPlatform.ready().then(function() {
     localNotify.registerRedirectHandler();
+    Logger.log("finished registering handlers, about to fire queued events");
+    $window.cordova.plugins.notification.local.fireQueuedEvents();
   });
 
   return localNotify;    

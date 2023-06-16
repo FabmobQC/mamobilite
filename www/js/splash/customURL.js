@@ -6,7 +6,7 @@ angular.module('emission.splash.customURLScheme', [])
     var cus = {};
 
     var parseURL = function(url) {
-        var addr = url.split('nrelopenpath://')[1];
+        var addr = url.split('//')[1];
         var route = addr.split('?')[0];
         var params = addr.split('?')[1];
         var paramsList = params.split('&');

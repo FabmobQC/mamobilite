@@ -25,11 +25,11 @@ angular.module('emission.i18n.utils', [])
       return Promise.resolve(url);
       // Following code would be nice to have, but it seems broken.
       return $http.get(url).then( function(result){
-        window.Logger.log(window.Logger.LEVEL_DEBUG,
+        Logger.log(window.Logger.LEVEL_DEBUG,
           "Successfully found the "+url+", result is " + JSON.stringify(result.data).substring(0,10));
         return url;
       }).catch(function (err) {
-        window.Logger.log(window.Logger.LEVEL_DEBUG,
+        Logger.log(window.Logger.LEVEL_DEBUG,
           url+" file not found, loading english version, error is " + JSON.stringify(err));
         return Promise.resolve(defaultVal);
       });

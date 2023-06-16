@@ -1,11 +1,14 @@
 'use strict';
 
-angular.module('emission.controllers', ['emission.splash.startprefs',
+angular.module('emission.controllers', ['emission.splash.updatecheck',
+                                        'emission.splash.startprefs',
                                         'emission.splash.pushnotify',
                                         'emission.splash.storedevicesettings',
                                         'emission.splash.localnotify',
+                                        'emission.splash.remotenotify',
                                         'emission.survey.external.launch',
-                                        'emission.stats.clientstats'])
+                                        'emission.stats.clientstats',
+                                        'emission.survey.multilabel.posttrip.prompt'])
 
 .controller('RootCtrl', function($scope) {})
 
@@ -13,7 +16,8 @@ angular.module('emission.controllers', ['emission.splash.startprefs',
 
 .controller('SplashCtrl', function($scope, $state, $interval, $rootScope, 
     StartPrefs, PushNotify, StoreDeviceSettings,
-    LocalNotify, ClientStats, SurveyLaunch)  {
+    SurveyLaunch,
+    LocalNotify, RemoteNotify, ClientStats, PostTripAutoPrompt)  {
   console.log('SplashCtrl invoked');
   // alert("attach debugger!");
   // PushNotify.startupInit();
@@ -21,6 +25,13 @@ angular.module('emission.controllers', ['emission.splash.startprefs',
   $rootScope.$on('$stateChangeSuccess', function(event, toState, toParams, fromState, fromParams){
     console.log("Finished changing state from "+JSON.stringify(fromState)
         + " to "+JSON.stringify(toState));
+    /*
+    if ($rootScope.checkedForUpdates) {
+      window.Logger.log(window.Logger.log("Already checked for update, skipping"));
+    } else {
+      UpdateCheck.checkForUpdates();
+      $rootScope.checkedForUpdates = true;
+    } */
     ClientStats.addReading(ClientStats.getStatKeys().STATE_CHANGED,
       fromState.name + '-2-' + toState.name).then(function() {}, function() {});
   });

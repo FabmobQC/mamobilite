@@ -554,6 +554,9 @@ h4.dashboard-headers{
   font-weight: normal;
   font-size: 16px;
   line-height: 19px;
+  display: flex;
+  align-items: center;
+  height: 100%;
 }
 
 .metric-summary-option-button {

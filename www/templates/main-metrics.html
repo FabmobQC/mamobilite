@@ -30,7 +30,7 @@
           <h4 class="dashboard-headers" translate>{{'.footprint'}}</h4>
           <div class="user-carbon">
             <img src="../img/icons/noun_leaf_3501175 3.png" alt="leaf"></img>
-            {{carbonData.userCarbon}}
+            <rangedisplay range="carbonData.userCarbon"></rangeDisplay> kg CO₂
           </div>
         </div>
         <!-- Calories -->
@@ -42,7 +42,7 @@
           
           <div class="user-calorie">
             <img src="../img/icons/whatshot_black_24dp 1.png" alt="fire">
-            {{caloriesData.userCalories}} kcal
+            <rangedisplay range="caloriesData.userCalories"></rangedisplay> kcal
           </div>
         </div>
       </div>
@@ -63,7 +63,7 @@
                     {{ modeTitle(summaryData.defaultSummary.distance[dIndex + i].key) }}
                   </div>
                   <div class="metric-summary-content">
-                    {{ summaryData.defaultSummary.distance[dIndex + i].values }}
+                    {{ formatDistance(summaryData.defaultSummary.distance[dIndex + i].values).slice(-1)[0] }}
                   </div>
                 </div>
               </div> 
@@ -86,7 +86,7 @@
                     {{ modeTitle(summaryData.defaultSummary.count[dIndex + i].key) }}
                   </div>
                   <div class="metric-summary-content">
-                    {{ summaryData.defaultSummary.count[dIndex + i].values }}
+                    {{ formatCount(summaryData.defaultSummary.count[dIndex + i].values).slice(-1)[0] }}
                   </div>
                 </div>
               </div> 
@@ -109,7 +109,7 @@
                     {{ modeTitle(summaryData.defaultSummary.duration[dIndex + i].key) }}
                   </div>
                   <div class="metric-summary-content">
-                    {{ summaryData.defaultSummary.duration[dIndex + i].values }}
+                    {{ formatDuration(summaryData.defaultSummary.duration[dIndex + i].values).slice(-1)[0] }}
                   </div>
                 </div>
               </div> 
@@ -131,7 +131,7 @@
                     {{ modeTitle(summaryData.defaultSummary.median_speed[dIndex + i].key) }}
                   </div>
                   <div class="metric-summary-content">
-                    {{ summaryData.defaultSummary.median_speed[dIndex + i].values }}
+                    {{ formatMeanSpeed(summaryData.defaultSummary.median_speed[dIndex + i].values).slice(-1)[0]  }}
                   </div>
                 </div>
               </div> 

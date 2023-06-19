@@ -27,11 +27,11 @@
       "cordova-plugin-app-version": {},
       "cordova-plugin-file": {},
       "cordova-plugin-device": {},
-      "cordova-plugin-customurlscheme": {	
-        "URL_SCHEME": "emission",	
-        "ANDROID_SCHEME": " ",	
-        "ANDROID_HOST": " ",	
-        "ANDROID_PATHPREFIX": "/"	
+      "cordova-plugin-customurlscheme": {
+        "URL_SCHEME": "emission",
+        "ANDROID_SCHEME": " ",
+        "ANDROID_HOST": " ",
+        "ANDROID_PATHPREFIX": "/"
       },
       "cordova-plugin-email-composer": {},
       "cordova-plugin-x-socialsharing": {
@@ -50,7 +50,7 @@
       },
       "cordova-plugin-em-opcodeauth": {},
       "cordova-plugin-em-server-communication": {},
-      "cordova-plugin-em-datacollection": {	
+      "cordova-plugin-em-datacollection": {
         "LOCATION_VERSION": "21.0.1",
         "ANDROIDX_CORE_VERSION": "1.8.0",
         "ANDROIDX_WORK_VERSION": "2.7.1"

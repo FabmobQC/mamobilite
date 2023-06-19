@@ -11,9 +11,9 @@ angular.module('emission', ['ionic',
     'emission.controllers','emission.services', 'emission.plugin.logger',
     'emission.splash.customURLScheme', 'emission.splash.referral',
     'emission.services.email',
-    'emission.intro', 'emission.main',
+  'emission.intro', 'emission.main',
     'emission.config.dynamic', 'emission.config.server_conn',
-    'pascalprecht.translate'])
+  'pascalprecht.translate'])
 
 .run(function($ionicPlatform, $rootScope, $http, Logger,
     CustomURLScheme, ReferralHandler, DynamicConfig, ServerConnConfig) {

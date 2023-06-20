@@ -5,20 +5,31 @@
 
     <!-- Refresh button -->
     <ion-nav-buttons side="right">
-            <button class="button-refresh" ng-click="refresh()">
-            </button>
+        <button class="button-refresh" ng-click="refresh()"></button>
     </ion-nav-buttons>
-        <ion-content class="diary-entry">
+    <!--
+    <ion-nav-buttons side="left">
+        <button class="button button-icon ion-help" ng-click="startWalkthrough()"></button>
+        <button id="map-fix-button" class="button refresh-tiles" ng-click="refreshTiles()" translate>{{'map-fixmap'}}</button>
+        <div class="buttons dark-color" style="text-align:center; background-color: transparent !important;" id="toget">
+            <button class="button button-icon icon ion-arrow-left-b date-picker-arrow" ng-click="prevDay()">
+            </button>
+            <button id="date-picker-button" class="button date-picker-button" ng-click="pickDay()"> {{currDay}} <i class="ion-ios-calendar-outline" style="font-size: 16px !important;"></i></button>
+            <button class="button button-icon icon ion-arrow-right-b ion-arrow-left-b date-picker-arrow" ng-click="nextDay()">
+            </button>
+        </div>
+    </ion-nav-buttons>
+    -->
+	<ion-content class="diary-entry">
         <!-- Date picker -->
         <div style="text-align:center;">
-            <button class="date-picker-arrow date-picker-arrow-left-icon" ng-click="prevDay()"><span style="opacity:0;"> &lt </span> <!-- invisible character to align text -->
-            </button>
+            <button class="date-picker-arrow date-picker-arrow-left-icon" ng-click="prevDay()"><span style="opacity:0;"> &lt </span><!-- invisible character to align text --></button>
             <button id="date-picker-button" class="date-picker-button" ng-click="pickDay()"> {{currDay}}</button>
             <button class="date-picker-arrow date-picker-arrow-right-icon" ng-click="nextDay()"><span style="opacity:0;"> &gt </span>
             </button>
         </div>
 
-
+        <!-- Daily survey button -->
         <div style="text-align:center;">
             <button class="daily-survey-button" ng-if="!!survey" ng-click="startSurvey()" ng-switch on="isLastDailySurvey">
                 <span ng-switch-when="true" translate=".daily-survey-last"></span>
@@ -41,7 +52,7 @@
 
 		<div collection-repeat="tripgj in data.currDayTripWrappers" item-height="tripgj.common.different? itemHt + 80 : itemHt + 30">
             <diary-list-item tripgj="tripgj"></diary-list-item>
-            <!-- Moved the diary trip template to trip_list_item.html  -->
+            <!-- Moved the diary trip template to diary_list_item.html  -->
           </div>
 		</ion-list>    
 	</ion-content>

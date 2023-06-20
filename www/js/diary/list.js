@@ -17,9 +17,8 @@ angular.module('emission.main.diary.list',['ui-leaflet',
                                       'ng-walkthrough', 'nzTour', 'emission.plugin.kvstore',
                                       'emission.stats.clientstats',
                                       'emission.plugin.logger',
-                                      'emission.main.diary.diarylistitem',
-                                      'emission.config.dynamic'
-
+                                      'emission.config.dynamic',
+                                      'emission.main.diary.diarylistitem'
   ])
 
 .controller("DiaryListCtrl", function($window, $scope, $rootScope, $injector,
@@ -50,6 +49,7 @@ angular.module('emission.main.diary.list',['ui-leaflet',
     // do this juggling
     $scope.itemHt = DEFAULT_ITEM_HT;
     Timeline.updateForDay(day);
+    // This will be used to show the date of datePicker in the user language.
     $scope.currDay = moment(day).format("DD MMM");
     // CommonGraph.updateCurrent();
   };

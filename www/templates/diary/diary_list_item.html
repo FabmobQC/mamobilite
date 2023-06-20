@@ -19,79 +19,55 @@
 
             <div class="diary-infos">
 
-            <!-- Distance and time -->
-            <div
-                class="diary-distance-time"
-                translate=".distance-in-time"
-                translate-value-distance="{{ tripgj.display_distance }}"
-                translate-value-time="{{ tripgj.display_time }}"
-            >
-            </div>
-            
-            <!-- Modes percentages -->
-            <div class="diary-modes-percents">
-                <span
-                    class="diary-modes-percents-text"
-                    ng-if="!tripgj.isDraft"
-                    ng-repeat="sectionPct in tripgj.percentages"
+                <!-- Distance and time -->
+                <div
+                    class="diary-distance-time"
+                    translate=".distance-in-time"
+                    translate-value-distance="{{ tripgj.display_distance }}"
+                    translate-value-time="{{ tripgj.display_time }}"
                 >
-                <span class="diary-modes-percents-icon {{sectionPct.icon}}"></span>
-                <span>{{sectionPct.pct}}%</span>
-                </span>
-                <button
-                    class="diary-draft-button"
-                    ng-if="tripgj.isDraft"
-                    ng-click="explainDraft($event)"
-                >
-                    <span translate>{{'.draft'}}</span>
-                </button>
-            </div>
-
-            <!-- Locations -->
-            <div class="diary-route">
-
-                <!-- Button for details -->
-                <div class="diary-detail-button ion-ios-arrow-right" ng-click="toDetail(tripgj.data.id)"></div>
+                </div>
                 
-                <div class="diary-street"> <!-- origin -->
-                    <i class="icon ion-ios-location" style="color: #1123CB;"></i>
-                    {{tripgj.start_place.properties.display_name.split(',')[0]}}
-                </div>
-                <div class="diary-street"> <!-- destination -->
-                    <i class="icon ion-ios-location" style="color: #ff5251;"></i>
-                        {{tripgj.end_place.properties.display_name.split(',')[0]}}
-                </div>
-
-            </div>
-            <div class="row" style="">
-                <linkedsurvey element-tag="{{surveyOpt.elementTag}}" class="col" trip="tripgj"></linkedsurvey>
-                </div>
-            
-            <!-- Mode and purpose selection -->
-            <div> <!-- container to keep buttons together -->
-                <div ng-repeat="input in userInputDetails" ng-attr-id="{{ 'userinput' + input.name }}">
-                    <button class="diary-button" ng-click ="openPopover($event, tripgj, input.name)">
-                        <span translate>
-                            {{
-                                tripgj.userInput[input.name].text
-                                ||
-                                tripgj.userInput[input.name].texts[currentLanguage]
-                                ||
-                                tripgj.userInput[input.name].texts["en"]
-                                ||
-                                input.choosetext
-                            }}
-                        </span>
+                <!-- Modes percentages -->
+                <div class="diary-modes-percents">
+                    <span
+                        class="diary-modes-percents-text"
+                        ng-if="!tripgj.isDraft"
+                        ng-repeat="sectionPct in tripgj.percentages"
+                    >
+                        <span class="diary-modes-percents-icon {{sectionPct.icon}}"></span>
+                        <span>{{sectionPct.pct}}%</span>
+                    </span>
+                    <button
+                        class="diary-draft-button"
+                        ng-if="tripgj.isDraft"
+                        ng-click="explainDraft($event)"
+                    >
+                        <span translate>{{'.draft'}}</span>
                     </button>
                 </div>
+
+                <!-- Locations -->
+                <div class="diary-route">
+
+                    <!-- Button for details -->
+                    <div class="diary-detail-button ion-ios-arrow-right" ng-click="toDetail(tripgj.data.id)"></div>
+                    
+                    <div class="diary-street"> <!-- origin -->
+                        <i class="icon ion-ios-location" style="color: #1123CB;"></i>
+                        {{tripgj.start_place.properties.display_name.split(',')[0]}}
+                    </div>
+                    <div class="diary-street"> <!-- destination -->
+                        <i class="icon ion-ios-location" style="color: #ff5251;"></i>
+                            {{tripgj.end_place.properties.display_name.split(',')[0]}}
+                    </div>
+                </div>
+                <!-- Mode and purpose selection -->
+                <div class="row" style="">
+                    <linkedsurvey element-tag="{{surveyOpt.elementTag}}" class="col" trip="tripgj"></linkedsurvey>
+                </div>
             </div>
-            
-            </div>
-            
         </div>
-
         <div class="diary-stop-time-tag">{{tripgj.display_end_time}}</div>
-      
     </ion-item>
-
 </div>

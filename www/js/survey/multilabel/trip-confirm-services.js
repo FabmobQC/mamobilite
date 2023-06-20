@@ -1,5 +1,5 @@
-angular.module('emission.survey.multilabel.services', ['ionic', 'emission.i18n.utils', "emission.plugin.logger"])
-.factory("ConfirmHelper", function($http, $ionicPopup, $translate, i18nUtils, Logger) {
+angular.module('emission.survey.multilabel.services', ['ionic', 'emission.i18n.utils', "emission.plugin.logger", "emission.config.dynamic"])
+.factory("ConfirmHelper", function($http, $ionicPopup, $translate, i18nUtils, Logger, DynamicConfig) {
     var ch = {};
     ch.INPUTS = ["MODE", "PURPOSE"]
     ch.inputDetails = {
@@ -45,22 +45,22 @@ angular.module('emission.survey.multilabel.services', ['ionic', 'emission.i18n.u
     }
 
     var loadAndPopulateOptions = function () {
-        return i18nUtils.geti18nFileName("json/", "trip_confirm_options", ".json")
-            .then((optionFileName) => {
-                console.log("Final option file = "+optionFileName);
-                return $http.get(optionFileName)
-                    .then(fillInOptions)
-                    .catch(function(err) {
-                       // no prompt here since we have a fallback
-                       console.log("error "+JSON.stringify(err)+" while reading confirm options, reverting to defaults");
-                       return $http.get("json/trip_confirm_options.json.sample")
-                        .then(fillInOptions)
-                        .catch(function(err) {
-                           // prompt here since we don't have a fallback
-                           Logger.displayError("Error while reading default confirm options", err);
-                        });
-                    });
-            });
+        return DynamicConfig.loadSavedConfig()
+            .then((config) => {
+                options = {
+                    "data": {
+                        "MODE": config.modes.map((mode) => ({
+                            text: mode.texts.find(text => text.language == $translate.use()).value,
+                            value: mode.label,
+                        })),
+                        "PURPOSE": config.purposes.map((purpose) => ({
+                            text: purpose.texts.find(text => text.language == $translate.use()).value,
+                            value: purpose.label,
+                        })),
+                    }
+                }
+                fillInOptions(options)
+            })
     }
 
     ch.getOptionsAndMaps = function(inputType) {

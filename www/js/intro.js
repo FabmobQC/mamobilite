@@ -131,7 +131,7 @@ angular.module('emission.intro', ['emission.splash.startprefs',
 
   $scope.getUserEmail = function() {
     $scope.data = {};
-    const tokenPopup = $ionicPopup.show({
+    const emailPopup = $ionicPopup.show({
         template: `
           <input type="email" ng-model="data.email">
           <br>
@@ -169,7 +169,7 @@ angular.module('emission.intro', ['emission.splash.startprefs',
           }
         ]
     });
-    tokenPopup.then(function(email) {
+    emailPopup.then(function(email) {
         if (token != null) {
             $scope.email = email;
             $scope.alreadySaved = false;
@@ -216,10 +216,9 @@ angular.module('emission.intro', ['emission.splash.startprefs',
           if (!$scope.selectedStudy.user_email_mandatory) {
             $scope.startSurvey();
           }
-          $scope.saveUserProfileOnServer() // do we still want to do this if e-mission-server receives the email?
-          .then(() => {
-            $scope.finish();
-          });
+          UserCacheHelper.setEmail($scope.email);
+          UserCacheHelper.setCreationTime(new Date());
+          $scope.finish();
         }, function(errorResult) {
           $scope.alertError('User registration error', errorResult);
         });
@@ -291,39 +290,6 @@ angular.module('emission.intro', ['emission.splash.startprefs',
       ];
 
       SurveyLaunch.startSurveyPrefilled(form.url, fillers);
-    });
-  };
-
-  $scope.saveUserProfileOnServer = function() {
-    return new Promise(function(resolve, reject) {
-
-      const options = {
-        method: 'post',
-        responseType: 'json'
-      }
-
-      return CommHelper.getUser().then(function(userProfile) {
-
-        options.data = {
-          uuid: userProfile.user_id["$uuid"],
-          project: $scope.selectedStudy.id,
-          email: $scope.email || "no@email.given", // TO FIX: The API should handle empty email
-        }
-
-        cordova.plugin.http.sendRequest(
-          "https://mamobilite.fabmobqc.ca/api/userprofile/",
-          options,
-          function() {
-            UserCacheHelper.setEmail($scope.email);
-            UserCacheHelper.setCreationTime(new Date());
-            resolve();
-          },
-          function(error) {
-            Logger.log("Failed to add userProfile " + JSON.stringify(error));
-            reject();
-          }
-        );
-      });
     });
   };
 

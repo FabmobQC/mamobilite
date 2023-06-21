@@ -116,7 +116,7 @@ angular.module('emission.survey.multilabel.services', ['ionic', 'emission.i18n.u
     }
 
     ch.otherValueToText = function(otherValue) {
-        var words = otherValue.replace("_", " ").split(" ");
+        var words = otherValue.replace?.("_", " ").split(" ") ?? [];
         if (words.length == 0) {
             return "";
         }

@@ -1,52 +1,61 @@
 <ion-view ng-class="ion-view-background" translate-namespace="diary">
-    <ion-nav-bar class="bar-stable">
-    </ion-nav-bar>
-    <ion-nav-buttons side="left" id="toget" class="row buttons">
-        <button class="button button-icon" ng-click="increaseHeight()">
-            <i class="icon ion-arrow-resize"></i>
-        </button>
-        <select ng-model="selFilter" ng-change="updateFilterSel(selFilter)">
-            <option ng-repeat="filter in filterInputs" value="{{filter.key}}" translate>
-                {{filter.text}}
-            </option>
-            <option value="show-all" translate>
-                {{'.show-all'}}
-            </option>
-        </select>
-    </ion-nav-buttons>
-    
-    <ion-nav-buttons side="right">
-        <button class="button button-icon" ng-click="refresh()">
-            <i class="icon ion-refresh"></i>
-        </button>
-    </ion-nav-buttons>
-	<ion-content class="diary-entry">
+    <ion-nav-title>
+        {{'diary.diary' | translate}}
+    </ion-nav-title>
 
-        <div class="control-list-item row">
-            <div class="control-list-text col">
-                <div class="row" translate="diary.filter-display-status" translate-values="{displayTripsLength: data.displayTrips.length, allTripsLength: data.allTrips.length}"></div>
-                <div ng-if="data.allTrips.length > 0" class="row" translate="diary.filter-display-range" translate-values="{currentStart: data.allTrips.slice(-1)[0].start_ts * 1000, currentEnd: infScrollControl.currentEnd * 1000}"></div>
-            </div>
-            <div ng-click="readDataFromServer()" ng-if="!infScrollControl.reachedEnd" id="gray" class="control-icon-button"><i class="ion-ios-download"></i></div>
-            <div ng-if="infScrollControl.reachedEnd" id="green" class="control-icon-button"><i class="ion-checkmark"></i></div>
+    <!-- Refresh button -->
+    <ion-nav-buttons side="right">
+        <button class="button-refresh" ng-click="refresh()"></button>
+    </ion-nav-buttons>
+    <!--
+    <ion-nav-buttons side="left">
+        <button class="button button-icon ion-help" ng-click="startWalkthrough()"></button>
+        <button id="map-fix-button" class="button refresh-tiles" ng-click="refreshTiles()" translate>{{'map-fixmap'}}</button>
+        <div class="buttons dark-color" style="text-align:center; background-color: transparent !important;" id="toget">
+            <button class="button button-icon icon ion-arrow-left-b date-picker-arrow" ng-click="prevDay()">
+            </button>
+            <button id="date-picker-button" class="button date-picker-button" ng-click="pickDay()"> {{currDay}} <i class="ion-ios-calendar-outline" style="font-size: 16px !important;"></i></button>
+            <button class="button button-icon icon ion-arrow-right-b ion-arrow-left-b date-picker-arrow" ng-click="nextDay()">
+            </button>
+        </div>
+    </ion-nav-buttons>
+    -->
+	<ion-content class="diary-entry">
+        <!-- Date picker -->
+        <div style="text-align:center;">
+            <button class="date-picker-arrow date-picker-arrow-left-icon" ng-click="prevDay()"><span style="opacity:0;"> &lt </span><!-- invisible character to align text --></button>
+            <button id="date-picker-button" class="date-picker-button" ng-click="pickDay()"> {{currDay}}</button>
+            <button class="date-picker-arrow date-picker-arrow-right-icon" ng-click="nextDay()"><span style="opacity:0;"> &gt </span>
+            </button>
+        </div>
+
+        <!-- Daily survey button -->
+        <div style="text-align:center;">
+            <button class="daily-survey-button" ng-if="!!survey" ng-click="startSurvey()" ng-switch on="isLastDailySurvey">
+                <span ng-switch-when="true" translate=".daily-survey-last"></span>
+                <span ng-switch-default translate=".daily-survey-for-day" translate-values="{dayOfStudy: dayOfStudy}"> </span>
+            </button>
         </div>
 
 		<ion-list>
+        <ion-nav-view ></ion-nav-view>
+        <!--
+        This needs to be collection-repeat instead of ng-repeat on android.
+        Otherwise, you can only scroll using the sidebar, scrolling on the map side does not work.
+        I have no clue why this happens, but it is not worth it to understand
+        this deeply. It is not purely a leaflet issue, but it also clearly something to
+        do with leaflet because scrolling on the details part does work.
+
+        If you want to change this from collection-repeat to ng-repeat, you
+        MUST test on android first to make sure that the scrolling works.
+        -->
+
 		<div collection-repeat="trip in data.displayTrips">
-            <div>
-                
-                <!-- <div ng-if='$index==0 || trip.prevTrip.display_date != trip.display_date'>
-                    <h2 class="hr-lines" translate> {{trip.display_date}}</h2>
-                </div> Commented out as we are not using prevTrip anymore. We should come back to 
-                this and implement some sort of horizontal line between trips-day-changing later on-->
-
-                <infinite-scroll-trip-item trip="trip" map-limiter="mapLimiter"></infinite-scroll-trip-item>
-
-            </div>
-        </div>
-
-        <!-- To Handle the last diary card not being in full view-- To see end_time of the final diary card, you have to hold the scroll up. This resolves that. -->
-        <div style="font-size: 50px; color: transparent;">SPACE</div>
-        </ion-list>
+            <infinite-scroll-trip-item trip="trip" map-limiter="mapLimiter"></infinite-scroll-trip-item>
+            <!-- Moved the diary trip template to trip_list_item.html  -->
+          </div>
+		</ion-list>    
 	</ion-content>
+
+
 </ion-view>

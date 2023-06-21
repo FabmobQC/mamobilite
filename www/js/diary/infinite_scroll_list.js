@@ -17,6 +17,7 @@ angular.module('emission.main.diary.infscrolllist',['ui-leaflet',
                                       'ng-walkthrough', 'nzTour', 'emission.plugin.kvstore',
                                       'emission.stats.clientstats',
                                       'emission.plugin.logger',
+                                      'emission.config.dynamic',
                                       'emission.main.diary.infscrolltripitem',
                                     ])
 
@@ -29,6 +30,8 @@ angular.module('emission.main.diary.infscrolllist',['ui-leaflet',
                                     $timeout,
                                     leafletData, Timeline, CommonGraph, DiaryHelper,
                                     SurveyOptions,
+                                    UserCacheHelper,
+                                    DynamicConfig,
     Config, ImperialConfig, PostTripManualMarker, nzTour, KVStore, Logger, UnifiedDataLoader, $ionicModal, $translate) {
 
   // TODO: load only a subset of entries instead of everything
@@ -53,10 +56,10 @@ angular.module('emission.main.diary.infscrolllist',['ui-leaflet',
   $scope.filterInputs.forEach((f) => {
     f.state = false;
   });
-  $scope.filterInputs[0].state = true;
+  //$scope.filterInputs[0].state = true;
   $scope.selFilter = $scope.filterInputs[0].key;
   ClientStats.addReading(ClientStats.getStatKeys().LABEL_TAB_SWITCH, {"source": null, "dest": $scope.getActiveFilters()});
-  $scope.allTrips = false;
+  $scope.allTrips = true;
   const ONE_WEEK = 7 * 24 * 60 * 60; // seconds
   const ONE_DAY = 24 * 60 * 60; // seconds
 
@@ -106,7 +109,7 @@ angular.module('emission.main.diary.infscrolllist',['ui-leaflet',
     $ionicLoading.show({
         template: $translate.instant('service.reading-server')
     });
-    Timeline.readAllConfirmedTrips(currEnd, ONE_WEEK).then((ctList) => {
+    Timeline.readAllConfirmedTrips($scope.currentBegin, ONE_DAY).then((ctList) => {
         Logger.log("Received batch of size "+ctList.length);
         ctList.forEach($scope.populateBasicClasses);
         ctList.forEach((trip, tIndex) => {
@@ -185,6 +188,7 @@ angular.module('emission.main.diary.infscrolllist',['ui-leaflet',
     });
   }
 
+  /* Disable scrollBottom
   $scope.$on("scroll.infiniteScrollComplete", function() {
     Logger.log("infiniteScrollComplete broadcast")
     if ($scope.infScrollControl.callback != undefined) {
@@ -192,6 +196,7 @@ angular.module('emission.main.diary.infscrolllist',['ui-leaflet',
       $scope.infScrollControl.callback = undefined;
     }
   });
+  */
 
   $scope.updateFilterSel = function(selFilterKey) {
     const prev = $scope.getActiveFilters();
@@ -375,7 +380,7 @@ angular.module('emission.main.diary.infscrolllist',['ui-leaflet',
     }
 
     $scope.refresh = function() {
-       $scope.setupInfScroll();
+       $scope.readAndUpdateForDay($scope.currDay);
     };
 
     // Tour steps
@@ -527,7 +532,7 @@ angular.module('emission.main.diary.infscrolllist',['ui-leaflet',
     })
 
     $ionicPlatform.ready().then(function() {
-      $scope.setupInfScroll();
+      readAndUpdateForDay(moment().startOf('day'));
       $scope.isAndroid = $window.device.platform.toLowerCase() === "android";
 
       $scope.$on('$ionicView.enter', function(ev) {
@@ -565,4 +570,162 @@ angular.module('emission.main.diary.infscrolllist',['ui-leaflet',
         }
       });
     });
+
+
+
+    
+    ClientStats.addReading(ClientStats.getStatKeys().LABEL_TAB_SWITCH,
+      {"source": null, "dest": $scope.data? $scope.data.currDay : undefined});
+
+    var readAndUpdateForDay = function(day) {
+      // This just launches the update. The update can complete in the background
+      // based on the time when the database finishes reading.
+      // TODO: Convert the usercache calls into promises so that we don't have to
+      // do this juggling
+      $scope.itemHt = DEFAULT_ITEM_HT;
+      // This will be used to show the date of datePicker in the user language.
+      $scope.currentBegin = moment(day).unix() + ONE_DAY;
+      $scope.currDay = moment(day).format("DD MMM");
+      // CommonGraph.updateCurrent();
+      $scope.setupInfScroll();
+    };
+
+    $scope.setCurrDay = function(val) {
+      if (typeof(val) === 'undefined') {
+        window.Logger.log(window.Logger.LEVEL_INFO, 'No date selected');
+      } else {
+        window.Logger.log(window.Logger.LEVEL_INFO, 'Selected date is :' + val);
+        readAndUpdateForDay(moment(val));
+      }
+    }
+
+    $scope.getDatePickerObject = function() {
+      return {
+        todayLabel: $translate.instant('list-datepicker-today'),  //Optional
+        closeLabel: $translate.instant('list-datepicker-close'),  //Optional
+        setLabel: $translate.instant('list-datepicker-set'),  //Optional
+        monthsList: moment.monthsShort(),
+        weeksList: moment.weekdaysMin(),
+        titleLabel: $translate.instant('diary.list-pick-a-date'),
+        setButtonType : 'button-positive',  //Optional
+        todayButtonType : 'button-stable',  //Optional
+        closeButtonType : 'button-stable',  //Optional
+        inputDate: new Date(),  //Optional
+        from: new Date(2015, 1, 1),
+        to: new Date(),
+        mondayFirst: true,  //Optional
+        templateType: 'popup', //Optional
+        showTodayButton: 'true', //Optional
+        modalHeaderColor: 'bar-positive', //Optional
+        modalFooterColor: 'bar-positive', //Optional
+        callback: $scope.setCurrDay, //Mandatory
+        dateFormat: 'dd MMM yyyy', //Optional
+        closeOnSelect: true //Optional
+      }
+    };
+
+    $scope.datepickerObject = $scope.getDatePickerObject();
+
+    $ionicPlatform.on("resume", function() {
+        $scope.datepickerObject = $scope.getDatePickerObject();
+    });
+
+    $scope.pickDay = function() {
+      ionicDatePicker.openDatePicker($scope.datepickerObject);
+    }
+
+    $scope.email = UserCacheHelper.getEmail()
+    $scope.creationTime = UserCacheHelper.getCreationTime();
+    $scope.config = null;
+    $scope.survey = null;
+    $scope.dayOfStudy = null;
+    $scope.lastDailySurveyday = -1;
+
+    $scope.setSurvey = function() {
+      if(!$scope.config || !Timeline.data.currDay) {
+        return;
+      }
+
+      const configTimezone = $scope.config.timezone;
+
+      const getDateInConfigTimezone = (momentToConvert) => {
+        const formatting = "YYYY-MM-DD";
+        const dateString = momentToConvert.tz(configTimezone).format(formatting);
+        return moment(dateString, formatting);
+      }
+
+      const currentMoment = new moment();
+      const diaryMoment = moment(Timeline.data.currDay);
+
+      if (diaryMoment.isAfter(currentMoment)) {
+        $scope.survey = null;
+        return;
+      }
+
+      const diaryDate = getDateInConfigTimezone(diaryMoment);
+
+      // Find the survey for the day of the diary
+      const subscriptionMoment = moment($scope.creationTime);
+      const subscriptionDate = getDateInConfigTimezone(subscriptionMoment);
+      $scope.dayOfStudy = diaryDate.diff(subscriptionDate, "days");
+      const dailyForms = $scope.config.daily_forms;
+      $scope.survey = dailyForms.find(({is_active, day}) => is_active && day === $scope.dayOfStudy);
+      if (!$scope.survey) {
+        return
+      }
+
+      // Check if it is too soon to display the survey
+      const currentDate = getDateInConfigTimezone(currentMoment);
+      const sameDay = currentDate.diff(diaryDate, "days") === 0;
+      if (sameDay) {
+        if (currentMoment.tz($scope.config.timezone).format("HH:mm:ss") < $scope.survey.display_time) {
+          $scope.survey = null;
+        }
+      }
+
+      const lastDailySurveyday = dailyForms.reduce(
+        (previousValue, {is_active, day}) => (is_active && day > previousValue) ? day : previousValue
+        , 0
+      );
+      $scope.isLastDailySurvey = lastDailySurveyday === $scope.dayOfStudy
+    }
+
+    $scope.startSurvey = function () {
+      if (!$scope.survey) {
+        return;
+      }
+
+      const appLanguage = $translate.use();
+      const surveyUrl = $scope.survey.urls.find(({language}) => language === appLanguage) || $scope.survey.urls[0];
+
+      if (!surveyUrl) {
+        return;
+      }
+      
+      const formattings = {
+        "fr": "DD/MM/YYYY",
+        "en": "MMMM Do YYYY",
+      };
+
+      const formatting = formattings[appLanguage] || formattings["en"];
+
+      const configTimezone = $scope.config.timezone;
+      const diaryMoment = moment(Timeline.data.currDay);
+      const formattedTripDate = diaryMoment.tz(configTimezone).format(formatting);
+
+      const queryString = `?user_email=${$scope.email}&trip_date=${formattedTripDate}`;
+      SurveyLaunch.startSurvey(surveyUrl.url + queryString);
+    };
+
+    DynamicConfig.loadSavedConfig().then((config) => {
+      $scope.config = config;
+      $scope.setSurvey();
+    });
+
+    $scope.currentLanguage = $translate.use();
+    $rootScope.$on("$translateChangeSuccess", () => {
+      $scope.setSurvey();
+      $scope.currentLanguage = $translate.use();
+      $scope.$broadcast('invalidateSize');
+    })
 });

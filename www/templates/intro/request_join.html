@@ -14,7 +14,7 @@
         <button 
             class="button button-block button-positive button-outline"
             ng-click="confirmStudy()"
-            ng-disabled="!selectedStudy"
+            ng-disabled="!selectedStudy || choiceIsConfirmed"
         >
             <span translate>{{'.join.confirm'}}</span>
         </button>

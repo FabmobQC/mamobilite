@@ -122,6 +122,7 @@ angular.module('emission.intro', ['emission.splash.startprefs',
   }
 
   $scope.loginNew = function() {
+    $scope.choiceIsConfirmed = true;
     $scope.randomToken = $scope.generateRandomToken(16);
     $scope.login($scope.randomToken);
   };
@@ -170,9 +171,8 @@ angular.module('emission.intro', ['emission.splash.startprefs',
         ]
     });
     emailPopup.then(function(email) {
-        if (token != null) {
+        if (email != null) {
             $scope.email = email;
-            $scope.alreadySaved = false;
             $scope.loginNew();
         }
     }).catch(function(err) {
@@ -296,6 +296,7 @@ angular.module('emission.intro', ['emission.splash.startprefs',
   $scope.email = null;
   $scope.studies = [];
   $scope.selectedStudy = null;
+  $scope.choiceIsConfirmed = false;
 
   const options = {
     method: 'get',

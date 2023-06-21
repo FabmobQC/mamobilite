@@ -28,6 +28,7 @@ angular.module('emission.survey.multilabel.buttons',
   };
 })
 .controller("MultiLabelCtrl", function($scope, $element, $attrs,
+    $ionicActionSheet, $translate,
     ConfirmHelper, $ionicPopover, $ionicPlatform, $window, ClientStats, MultiLabelService) {
   console.log("Invoked multilabel directive controller for labels "+ConfirmHelper.INPUTS);
 
@@ -147,7 +148,15 @@ angular.module('emission.survey.multilabel.buttons',
     };
     $scope.editingTrip = trip;
     Logger.log("in openPopover, setting draftInput = " + JSON.stringify($scope.draftInput));
-    $scope.popovers[inputType].show($event);
+    $ionicActionSheet.show({
+      buttons: $scope.inputParams[inputType].options,
+      titleText: $translate.instant("diary"+ConfirmHelper.inputDetails[inputType].labeltext),
+      buttonClicked: function (index, button) {
+        $scope.selected[inputType] = $scope.inputParams[inputType].options[index]; // get the non translated input
+        $scope.choose(inputType);
+        return true;
+      },
+    });
   };
 
   var closePopover = function (inputType) {

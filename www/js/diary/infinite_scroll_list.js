@@ -32,6 +32,7 @@ angular.module('emission.main.diary.infscrolllist',['ui-leaflet',
                                     SurveyOptions,
                                     UserCacheHelper,
                                     DynamicConfig,
+                                    SurveyLaunch,
     Config, ImperialConfig, PostTripManualMarker, nzTour, KVStore, Logger, UnifiedDataLoader, $ionicModal, $translate) {
 
   // TODO: load only a subset of entries instead of everything

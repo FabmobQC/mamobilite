@@ -56,7 +56,7 @@ angular.module('emission.main.diary.infscrolllist',['ui-leaflet',
   $scope.filterInputs.forEach((f) => {
     f.state = false;
   });
-  //$scope.filterInputs[0].state = true;
+  $scope.filterInputs[1].state = true;
   $scope.selFilter = $scope.filterInputs[0].key;
   ClientStats.addReading(ClientStats.getStatKeys().LABEL_TAB_SWITCH, {"source": null, "dest": $scope.getActiveFilters()});
   $scope.allTrips = true;
@@ -380,7 +380,7 @@ angular.module('emission.main.diary.infscrolllist',['ui-leaflet',
     }
 
     $scope.refresh = function() {
-       $scope.readAndUpdateForDay($scope.currDay);
+       readAndUpdateForDay(Timeline.data.currDay);
     };
 
     // Tour steps
@@ -586,6 +586,7 @@ angular.module('emission.main.diary.infscrolllist',['ui-leaflet',
       // This will be used to show the date of datePicker in the user language.
       $scope.currentBegin = moment(day).unix() + ONE_DAY;
       $scope.currDay = moment(day).format("DD MMM");
+      Timeline.data.currDay = day;
       // CommonGraph.updateCurrent();
       $scope.setupInfScroll();
     };
@@ -633,6 +634,20 @@ angular.module('emission.main.diary.infscrolllist',['ui-leaflet',
     $scope.pickDay = function() {
       ionicDatePicker.openDatePicker($scope.datepickerObject);
     }
+
+    $scope.prevDay = function() {
+      console.log("Called prevDay when currDay = "+Timeline.data.currDay.format('YYYY-MM-DD'));
+      var prevDay = moment(Timeline.data.currDay).subtract(1, 'days');
+      console.log("prevDay = "+prevDay.format('YYYY-MM-DD'));
+      readAndUpdateForDay(prevDay);
+    };
+
+    $scope.nextDay = function() {
+      console.log("Called nextDay when currDay = "+Timeline.data.currDay.format('YYYY-MM-DD'));
+      var nextDay = moment(Timeline.data.currDay).add(1, 'days');
+      console.log("nextDay = "+nextDay);
+      readAndUpdateForDay(nextDay);
+    };
 
     $scope.email = UserCacheHelper.getEmail()
     $scope.creationTime = UserCacheHelper.getCreationTime();

@@ -587,6 +587,7 @@ angular.module('emission.main.diary.infscrolllist',['ui-leaflet',
       $scope.currentBegin = moment(day).unix() + ONE_DAY;
       $scope.currDay = moment(day).format("DD MMM");
       Timeline.data.currDay = day;
+      $scope.setSurvey();
       // CommonGraph.updateCurrent();
       $scope.setupInfScroll();
     };

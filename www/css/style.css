@@ -1229,7 +1229,8 @@ span.rz-bar-wrapper {
 #iframe {
   /*width: 375px !important;*/
   height: 100%;
-  -webkit-overflow-scrolling: touch !important;
+  /*use auto for scrolling to fix scroll on headers*/
+  -webkit-overflow-scrolling: auto !important;
   overflow: scroll !important;
 }
 

@@ -54,10 +54,12 @@ angular.module('emission.main.diary.infscrolllist',['ui-leaflet',
   $scope.getActiveFilters = function() {
     return $scope.filterInputs.filter(sf => sf.state).map(sf => sf.key);
   }
+  /*
+   * We do not use filters, so we just set all of them to false
+   */
   $scope.filterInputs.forEach((f) => {
     f.state = false;
   });
-  $scope.filterInputs[1].state = true;
   $scope.selFilter = $scope.filterInputs[0].key;
   ClientStats.addReading(ClientStats.getStatKeys().LABEL_TAB_SWITCH, {"source": null, "dest": $scope.getActiveFilters()});
   $scope.allTrips = true;

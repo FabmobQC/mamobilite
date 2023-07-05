@@ -329,5 +329,5 @@ angular.module('emission.intro', ['emission.splash.startprefs',
     })
   }
 
-    $scope.name_field = `name_${$translate.use() === 'fr' || 'en'}`;
+    $scope.name_field = `name_${$translate.use() === 'fr' ? 'fr' : 'en'}`;
 });

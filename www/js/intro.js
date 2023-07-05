@@ -257,6 +257,7 @@ angular.module('emission.intro', ['emission.splash.startprefs',
 
   $ionicPlatform.ready().then(function() {
     console.log("app is launched, currently NOP");
+    $scope.getIntroBox().enableSlide(false); // FabMob: We don't want the user to swipe on terms of use
   });
 
   $scope.startSurvey = function() {

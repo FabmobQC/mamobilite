@@ -277,7 +277,8 @@
     },
     "consent": {
         "button-accept": "J'accepte",
-        "button-decline": "Je refuse"
+        "button-decline": "Je refuse",
+        "button-continue": "Continuer"
     },
     "updatecheck": {
         "downloading-update": "Mise à jour de l'UI uniquement",

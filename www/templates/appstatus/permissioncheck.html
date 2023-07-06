@@ -11,9 +11,10 @@
         <div class="col-10">{{locCheck.statusIcon}}</div>
     </div>
     <div class="row item-text-wrap">{{locCheck.desc}}</div>
-    <div class="row">
-        <button class="button button-icon" ng-click="locCheck.fix()">Fix</button>
-        <button class="button button-icon" ng-click="locCheck.refresh()">Refresh</button>
+    <div class="row" ng-if="locCheck.statusClass === 'status-red'">
+        <button class="button" ng-click="locCheck.fix()">Fix</button>
+        &nbsp;
+        <button class="button" ng-click="locCheck.refresh()">Refresh</button>
     </div>
 </ion-item>
 </ion-list>
@@ -31,9 +32,10 @@
         <div class="col-10">{{fitnessCheck.statusIcon}}</div>
     </div>
     <div class="row item-text-wrap">{{fitnessCheck.desc}}</div>
-    <div class="row">
-        <button class="button button-icon" ng-click="fitnessCheck.fix()">Fix</button>
-        <button class="button button-icon" ng-click="fitnessCheck.refresh()">Refresh</button>
+    <div class="row" ng-if="fitnessCheck.statusClass === 'status-red'">
+        <button class="button" ng-click="fitnessCheck.fix()">Fix</button>
+        &nbsp;
+        <button class="button" ng-click="fitnessCheck.refresh()">Refresh</button>
     </div>
 </ion-item>
 </ion-list>
@@ -50,9 +52,10 @@
         <div class="col-10">{{notificationCheck.statusIcon}}</div>
     </div>
     <div class="row item-text-wrap">{{notificationCheck.desc}}</div>
-    <div class="row">
-        <button class="button button-icon" ng-click="notificationCheck.fix()">Fix</button>
-        <button class="button button-icon" ng-click="notificationCheck.refresh()">Refresh</button>
+    <div class="row" ng-if="notificationCheck.statusClass === 'status-red'">
+        <button class="button" ng-click="notificationCheck.fix()">Fix</button>
+        &nbsp;
+        <button class="button" ng-click="notificationCheck.refresh()">Refresh</button>
     </div>
 </ion-item>
 </ion-list>
@@ -70,9 +73,10 @@
         <div class="col-10">{{backgroundRestrictionCheck.statusIcon}}</div>
     </div>
     <div class="row item-text-wrap">{{backgroundRestrictionCheck.desc}}</div>
-    <div class="row">
-        <button class="button button-icon" ng-click="backgroundRestrictionCheck.fix()">Fix</button>
-        <button class="button button-icon" ng-click="backgroundRestrictionCheck.refresh()">Refresh</button>
+    <div class="row" ng-if="backgroundRestrictionCheck.statusClass === 'status-red'">
+        <button class="button" ng-click="backgroundRestrictionCheck.fix()">Fix</button>
+        &nbsp;
+        <button class="button" ng-click="backgroundRestrictionCheck.refresh()">Refresh</button>
     </div>
 </ion-item>
 </ion-list>

@@ -402,7 +402,8 @@
     },
     "consent": {
         "button-accept": "I accept",
-        "button-decline": "I refuse"
+        "button-decline": "I refuse",
+        "button-continue": "Continue"
     },
     "updatecheck": {
         "downloading-update": "Downloading UI-only update",

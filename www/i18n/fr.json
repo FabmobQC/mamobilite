@@ -307,7 +307,8 @@
                     "android-lt-6": "Activé lors de l'installation de l'application.",
                     "android-6-9": "Veuillez sélectionner 'autoriser'",
                     "android-10": "Veuillez sélectionner 'Autoriser tout le temps'",
-                    "android-gte-11": "Sur la page des paramètres de l'application, choisissez l'autorisation 'Emplacement' et définissez-la sur 'Autoriser tout le temps'",
+                    "android-gte-11": "Sur la page des paramètres de l'application, choisissez l'autorisation 'Emplacement' et sélectionnez 'Autoriser tout le temps'",
+                    "android-gte-12": "Sur la page des paramètres de l'application, choisissez l'autorisation 'Localisation' et sélectionnez 'Toujours autoriser'",
                     "ios-lt-13": "Veuillez sélectionner 'Toujours autoriser'",
                     "ios-gte-13": "Veuillez sélectionner 'Toujours autoriser' Sur la page des paramètres de l'application, veuillez sélectionner 'Toujours' et 'Précis' et revenez ici pour continuer"
                 }
@@ -338,7 +339,15 @@
             "unusedapprestrict": {
                 "name": "Applications inutilisées désactivées",
                 "description": {
-                    "android-disable": "Sur la page des paramètres de l'application, accédez à 'Autorisations' et assurez-vous que les autorisations de l'application ne seront pas automatiquement réinitialisées.",
+                    "android-disable-lt-12": "Sur la page des paramètres de l'application, accédez à 'Autorisations' et assurez-vous que les autorisations de l'application ne seront pas automatiquement réinitialisées.",
+                    "android-disable-gte-12": "Sur la page des paramètres de l'application, désactivez 'Suppr. autoris. si appli. inutilisée'",
+                    "ios": "Merci d'autoriser."
+                }
+            },
+            "ignorebatteryopt": {
+                "name": "Désactiver les optimisations de batterie",
+                "description": {
+                    "android-disable": "Sur la page 'Optimiser util. pile', chercher cette l'application et désactivez les optimisations.",
                     "ios": "Merci d'autoriser."
                 }
             }

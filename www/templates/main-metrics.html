@@ -120,18 +120,18 @@
         <ion-slide>
           <div class="dashboard-bottom-card">
             <h4 class="dashboard-headers" translate>{{'.median-speed'}}</h4>
-            <div class="row" ng-repeat="d in summaryData.userSummary.median_speed" ng-if="$index % 2 == 0" ng-init="dIndex = $index" style="padding-top: 5px !important;">
-              <div ng-repeat="i in [0,1]" ng-if="(dIndex + i)<summaryData.userSummary.median_speed.length" class="col-50" style="margin-bottom: 30px;">
+            <div class="row" ng-repeat="d in summaryData.userSummary.mean_speed" ng-if="$index % 2 == 0" ng-init="dIndex = $index" style="padding-top: 5px !important;">
+              <div ng-repeat="i in [0,1]" ng-if="(dIndex + i)<summaryData.userSummary.mean_speed.length" class="col-50" style="margin-bottom: 30px;">
                 
                 <div class="metric-summary-left">
-                  <i ng-class="'icon ' + modeIcon(summaryData.userSummary.median_speed[dIndex + i].key)"></i>
+                  <i ng-class="'icon ' + modeIcon(summaryData.userSummary.mean_speed[dIndex + i].key)"></i>
                 </div>
                 <div class="metric-summary-right">
                   <div class="metric-summary-title" translate>
-                    {{ modeTitle(summaryData.defaultSummary.median_speed[dIndex + i].key) }}
+                    {{ modeTitle(summaryData.defaultSummary.mean_speed[dIndex + i].key) }}
                   </div>
                   <div class="metric-summary-content">
-                    {{ formatMeanSpeed(summaryData.defaultSummary.median_speed[dIndex + i].values).slice(-1)[0]  }}
+                    {{ formatMeanSpeed(summaryData.defaultSummary.mean_speed[dIndex + i].values).slice(-1)[0]  }}
                   </div>
                 </div>
               </div> 

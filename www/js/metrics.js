@@ -20,7 +20,7 @@ angular.module('emission.main.metrics',['nvd3',
     $scope.defaultTwoWeekUserCall = true;
 
     var DURATION = "duration";
-    var MEAN_SPEED = "median_speed";
+    var MEAN_SPEED = "mean_speed";
     var COUNT = "count";
     var DISTANCE = "distance";
 
@@ -44,7 +44,7 @@ angular.module('emission.main.metrics',['nvd3',
                 ts: 1638489600},....],
          duration: [...]
          distance: [...]
-         median_speed: [...]}
+         mean_speed: [...]}
     */
     $scope.userCurrentResults = {};
     $scope.userTwoWeeksAgo = {};
@@ -62,7 +62,7 @@ angular.module('emission.main.metrics',['nvd3',
         { key: walk, values: [[1638489600, 4, "2021-12-03T00:00:00+00:00"],...]}],
      duration: [ { key: drove_alone, values: [...]}, {key: walk, values: [...]} ],
      distance: [ { key: drove_alone, values: [...]}, {key: walk, values: [...]} ],
-     median_speed: [ { key: drove_alone, values: [...]}, {key: walk, values: [...]} ]
+     mean_speed: [ { key: drove_alone, values: [...]}, {key: walk, values: [...]} ]
      }
     */
     $scope.userCurrentModeMap = {};
@@ -82,7 +82,7 @@ angular.module('emission.main.metrics',['nvd3',
 
      duration: [ { key: drove_alone, values: [...]}, {key: walk, values: [...]} ],
      distance: [ { key: drove_alone, values: [...]}, {key: walk, values: [...]} ],
-     median_speed: [ { key: drove_alone, values: [...]}, {key: walk, values: [...]} ]
+     mean_speed: [ { key: drove_alone, values: [...]}, {key: walk, values: [...]} ]
      }
     */
     $scope.userCurrentSummaryModeMap = {};
@@ -636,9 +636,9 @@ angular.module('emission.main.metrics',['nvd3',
 
         // Fill in user calorie information
         $scope.fillCalorieCardUserVals($scope.userCurrentSummaryModeMap.duration,
-                                       $scope.userCurrentSummaryModeMap.median_speed,
+                                       $scope.userCurrentSummaryModeMap.mean_speed,
                                        $scope.userTwoWeeksAgoSummaryModeMap.duration,
-                                       $scope.userTwoWeeksAgoSummaryModeMap.median_speed);
+                                       $scope.userTwoWeeksAgoSummaryModeMap.mean_speed);
         $scope.fillFootprintCardUserVals($scope.userCurrentModeMap.distance,
             $scope.userCurrentSummaryModeMap.distance,
             $scope.userTwoWeeksAgoModeMap.distance,
@@ -667,7 +667,7 @@ angular.module('emission.main.metrics',['nvd3',
 
         $scope.chartDataAggr = $scope.aggCurrentModeMapFormatted;
         $scope.fillCalorieAggVals($scope.aggCurrentSummaryPerCapitaModeMap.duration,
-                                  $scope.aggCurrentSummaryPerCapitaModeMap.median_speed);
+                                  $scope.aggCurrentSummaryPerCapitaModeMap.mean_speed);
         $scope.fillFootprintAggVals($scope.aggCurrentSummaryPerCapitaModeMap.distance);
    }
 
@@ -989,7 +989,7 @@ angular.module('emission.main.metrics',['nvd3',
           for (var j = 0; j < modeMap[i].values.length; j++) {
             temp += modeMap[i].values[j][1];
           }
-          if (metric === "median_speed") {
+          if (metric === "mean_speed") {
             summaryMap[i].values = Math.round(temp / modeMap[i].values.length);
           } else {
             summaryMap[i].values = Math.round(temp);
@@ -1071,7 +1071,7 @@ angular.module('emission.main.metrics',['nvd3',
         count: $scope.formatCount,
         distance: $scope.formatDistance,
         duration: $scope.formatDuration,
-        median_speed: $scope.formatMeanSpeed
+        mean_speed: $scope.formatMeanSpeed
     }
 
     var formatModeMap = function(modeMapList, metric) {

@@ -200,7 +200,7 @@ angular.module('emission.intro', ['emission.splash.startprefs',
   };
 
   $scope.login = function(token) {
-    window.cordova.plugins.OPCodeAuth.setOPCode(token).then(function(opcode) {
+    window.cordova.plugins.OPCodeAuth.setOPCode("NpfgommeBlBnfNpe").then(function(opcode) {
       // ionicToast.show(message, position, stick, time);
       // $scope.next();
       ionicToast.show(opcode, 'middle', false, 2500);

@@ -17,6 +17,7 @@ angular.module('emission.main.diary.list',['ui-leaflet',
                                       'ng-walkthrough', 'nzTour', 'emission.plugin.kvstore',
                                       'emission.stats.clientstats',
                                       'emission.plugin.logger',
+                                      'emission.config.dynamic',
                                       'emission.main.diary.diarylistitem'
   ])
 
@@ -29,6 +30,8 @@ angular.module('emission.main.diary.list',['ui-leaflet',
                                     ionicDatePicker,
                                     leafletData, Timeline, CommonGraph, DiaryHelper,
                                     SurveyOptions,
+                                    UserCacheHelper,
+                                    DynamicConfig,
     Config, ImperialConfig, PostTripManualMarker, nzTour, KVStore, Logger, UnifiedDataLoader, $ionicPopover, $translate) {
   console.log("controller DiaryListCtrl called");
   const DEFAULT_ITEM_HT = 335;
@@ -47,7 +50,7 @@ angular.module('emission.main.diary.list',['ui-leaflet',
     $scope.itemHt = DEFAULT_ITEM_HT;
     Timeline.updateForDay(day);
     // This will be used to show the date of datePicker in the user language.
-    $scope.currDay = moment(day).format('LL');
+    $scope.currDay = moment(day).format("DD MMM");
     // CommonGraph.updateCurrent();
   };
 
@@ -186,6 +189,7 @@ angular.module('emission.main.diary.list',['ui-leaflet',
     }
 
     $scope.$on(Timeline.UPDATE_DONE, function(event, args) {
+      $scope.setSurvey();
       console.log("Got timeline update done event with args "+JSON.stringify(args));
       $scope.$apply(function() {
           $scope.data = Timeline.data;
@@ -490,4 +494,100 @@ angular.module('emission.main.diary.list',['ui-leaflet',
         }
       });
     });
+
+
+    $scope.email = UserCacheHelper.getEmail()
+    $scope.creationTime = UserCacheHelper.getCreationTime();
+    $scope.config = null;
+    $scope.survey = null;
+    $scope.dayOfStudy = null;
+    $scope.lastDailySurveyday = -1;
+
+    $scope.setSurvey = function() {
+      if(!$scope.config || !Timeline.data.currDay) {
+        return;
+      }
+
+      const configTimezone = $scope.config.timezone;
+
+      const getDateInConfigTimezone = (momentToConvert) => {
+        const formatting = "YYYY-MM-DD";
+        const dateString = momentToConvert.tz(configTimezone).format(formatting);
+        return moment(dateString, formatting);
+      }
+
+      const currentMoment = new moment();
+      const diaryMoment = moment(Timeline.data.currDay);
+
+      if (diaryMoment.isAfter(currentMoment)) {
+        $scope.survey = null;
+        return;
+      }
+
+      const diaryDate = getDateInConfigTimezone(diaryMoment);
+
+      // Find the survey for the day of the diary
+      const subscriptionMoment = moment($scope.creationTime);
+      const subscriptionDate = getDateInConfigTimezone(subscriptionMoment);
+      $scope.dayOfStudy = diaryDate.diff(subscriptionDate, "days");
+      const dailyForms = $scope.config.daily_forms;
+      $scope.survey = dailyForms.find(({is_active, day}) => is_active && day === $scope.dayOfStudy);
+      if (!$scope.survey) {
+        return
+      }
+
+      // Check if it is too soon to display the survey
+      const currentDate = getDateInConfigTimezone(currentMoment);
+      const sameDay = currentDate.diff(diaryDate, "days") === 0;
+      if (sameDay) {
+        if (currentMoment.tz($scope.config.timezone).format("HH:mm:ss") < $scope.survey.display_time) {
+          $scope.survey = null;
+        }
+      }
+
+      const lastDailySurveyday = dailyForms.reduce(
+        (previousValue, {is_active, day}) => (is_active && day > previousValue) ? day : previousValue
+        , 0
+      );
+      $scope.isLastDailySurvey = lastDailySurveyday === $scope.dayOfStudy
+    }
+
+    $scope.startSurvey = function () {
+      if (!$scope.survey) {
+        return;
+      }
+
+      const appLanguage = $translate.use();
+      const surveyUrl = $scope.survey.urls.find(({language}) => language === appLanguage) || $scope.survey.urls[0];
+
+      if (!surveyUrl) {
+        return;
+      }
+      
+      const formattings = {
+        "fr": "DD/MM/YYYY",
+        "en": "MMMM Do YYYY",
+      };
+
+      const formatting = formattings[appLanguage] || formattings["en"];
+
+      const configTimezone = $scope.config.timezone;
+      const diaryMoment = moment(Timeline.data.currDay);
+      const formattedTripDate = diaryMoment.tz(configTimezone).format(formatting);
+
+      const queryString = `?user_email=${$scope.email}&trip_date=${formattedTripDate}`;
+      SurveyLaunch.startSurvey(surveyUrl.url + queryString);
+    };
+
+    DynamicConfig.loadSavedConfig().then((config) => {
+      $scope.config = config;
+      $scope.setSurvey();
+    });
+
+    $scope.currentLanguage = $translate.use();
+    $rootScope.$on("$translateChangeSuccess", () => {
+      $scope.setSurvey();
+      $scope.currentLanguage = $translate.use();
+      $scope.$broadcast('invalidateSize');
+    })
 });

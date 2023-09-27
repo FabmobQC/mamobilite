@@ -177,7 +177,8 @@ angular.module('emission.main.common.services', ['emission.plugin.logger'])
           +" data = "+JSON.stringify(response.data));
         return address2Name(response.data);
       }).catch((error) => {
-        Logger.displayError("while reading address data ",error);
+        // Logger.displayError("while reading address data ",error);
+        console.error("while reading address data ",error);
       });
     };
 

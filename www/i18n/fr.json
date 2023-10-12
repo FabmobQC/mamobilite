@@ -363,9 +363,16 @@
         "join": {
             "cancel": "Annuler",
             "confirm": "Confirmer",
+            "join-anonymously": "Joindre anonymement",
+            "join-with-email": "Joindre",
+            "login-with-username": "S'authentifier",
             "enter-email": "Entrez l'adresse électronique sur laquelle vous avez reçu les instructions pour participer à ce projet",
+            "username": "Nom d'utilisateur",
+            "password": "Mot de passe",
             "repeat-email": "Répétez votre adresse électronique",
-            "what-project": "Dans quel projet participez-vous?"
+            "what-project": "À quel projet participez-vous?",
+            "username-already-exists": "Ce nom d'utilisateur existe déjà. Veuillez en choisir un autre.",
+            "invalid-credentials": "Identifiants invalides. Veuillez vérifier que vous avez sélectionné le bon projet."
         }
     }
 }

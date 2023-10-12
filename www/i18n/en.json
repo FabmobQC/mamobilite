@@ -392,9 +392,16 @@
         "join": {
             "cancel": "Cancel",
             "confirm": "Confirm",
+            "join-anonymously": "Join anonymously",
+            "join-with-email": "Join",
+            "login-with-username": "Login",
             "enter-email": "Enter your email address you received the survey instructions on",
+            "username": "Username",
+            "password": "password",
             "repeat-email": "Repeat email",
-            "what-project": "What project are you participating in?"
+            "what-project": "What project are you participating in?",
+            "username-already-exists": "Username already exists",
+            "invalid-credentials": "Invalid credentials. Please verify you have selected the correct project"
         }
     },
     "allow_background": {

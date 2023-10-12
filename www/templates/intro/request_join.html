@@ -1,22 +1,39 @@
 <ion-view translate-namespace="intro">
     <ion-content class="consent-text">
         <center><h3 translate>{{'.join.what-project'}}</h1></center>
-        <center><ion-spinner ng-if="!studies.length"></ion-spinner></center>
+        <center><ion-spinner ng-if="!projects.length"></ion-spinner></center>
         <ion-list>
             <ion-item 
-                ng-repeat="study in studies | filter:{ add_list: true }"
-                ng-click="selectStudy(study)"
-                ng-style="study.id === selectedStudy.id && {'background-color': '#387ff5', color: 'white'}"
+                ng-repeat="project in projects | filter:{ add_list: true }"
+                ng-click="selectProject(project)"
+                ng-style="project.id === selectedProject.id && {'background-color': '#387ff5', color: 'white'}"
             >
-                {{study[name_field]}}
+                {{project[name_field]}}
             </ion-item>
         </ion-list>
         <button 
             class="button button-block button-positive button-outline"
-            ng-click="confirmStudy()"
-            ng-disabled="!selectedStudy || choiceIsConfirmed"
+            ng-click="joinWithUsername()"
+            ng-if="selectedProject"
+            ng-disabled="!selectedProject || choiceIsConfirmed"
         >
-            <span translate>{{'.join.confirm'}}</span>
+            <span translate>{{'.join.join-with-email'}}</span>
+        </button>
+        <button 
+            class="button button-block button-positive button-outline"
+            ng-click="loginWithUsername()"
+            ng-if="selectedProject"
+            ng-disabled="!selectedProject || choiceIsConfirmed"
+        >
+            <span translate>{{'.join.login-with-username'}}</span>
+        </button>
+        <button 
+            class="button button-block button-positive button-outline"
+            ng-click="joinAnonymously()"
+            ng-if="selectedProject && !selectedProject.user_email_mandatory"
+            ng-disabled="!selectedProject || choiceIsConfirmed"
+        >
+            <span translate>{{'.join.join-anonymously'}}</span>
         </button>
     </ion-content>
 </ion-view>

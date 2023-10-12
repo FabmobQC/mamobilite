@@ -121,19 +121,47 @@ angular.module('emission.intro', ['emission.splash.startprefs',
       });
   }
 
-  $scope.loginNew = function() {
-    $scope.choiceIsConfirmed = true;
-    $scope.randomToken = $scope.generateRandomToken(16);
-    $scope.login($scope.randomToken);
+  $scope.openJoinAnonymouslyPopup = function() {
+    return $ionicPopup.show({
+        template: "",
+        title: $translate.instant('intro.join.join-anonymously') + '<br>',
+        scope: $scope,
+        buttons: [
+          {
+            text: '<b>' + $translate.instant('intro.join.confirm') + '</b>',
+            type: 'button-positive',
+            onTap: () => $scope.selectedProject.id
+          },{
+            text: '<b>' + $translate.instant('intro.join.cancel') + '</b>',
+            type: 'button-stable',
+            onTap: function(e) {
+              return null;
+            }
+          }
+        ]
+    })
   };
-
 
   const emailRegex = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/
 
-  $scope.getUserEmail = function() {
-    $scope.data = {};
-    const emailPopup = $ionicPopup.show({
+  $scope.openJoinWithCredentialsPopup = function() {
+    $scope.data.project = $scope.selectedProject.id;
+    $scope.data.password = ""
+    return $ionicPopup.show({
         template: `
+          <label>
+          ${$translate.instant('intro.join.username')}
+          </label>
+          <input ng-model="data.username">
+          <br>
+          <label>
+          ${$translate.instant('intro.join.password')}
+          </label>
+          <input type="password" ng-model="data.password">
+          <br>
+          <label>
+          ${$translate.instant('intro.join.enter-email')}
+          </label>
           <input type="email" ng-model="data.email">
           <br>
           <label>
@@ -142,7 +170,7 @@ angular.module('emission.intro', ['emission.splash.startprefs',
           <br>
           <input type="email" ng-model="data.repeatEmail">
         `,
-        title: $translate.instant('intro.join.enter-email') + '<br>',
+        title: $translate.instant('intro.join.join-with-email') + '<br>',
         scope: $scope,
         buttons: [
           {
@@ -150,15 +178,17 @@ angular.module('emission.intro', ['emission.splash.startprefs',
             type: 'button-positive',
             onTap: function(e) {
               if (
+                !$scope.data.username
+                ||
+                !$scope.data.password
+                || 
                 $scope.data.email != $scope.data.repeatEmail
                 ||
                 !emailRegex.test($scope.data.email)
               ) {
-                //don't allow the user to close unless he enters a username
-
                 e.preventDefault();
               } else {
-                return $scope.data.email;
+                return $scope.data;
               }
             }
           },{
@@ -169,15 +199,51 @@ angular.module('emission.intro', ['emission.splash.startprefs',
             }
           }
         ]
-    });
-    emailPopup.then(function(email) {
-        if (email != null) {
-            $scope.email = email;
-            $scope.loginNew();
-        }
-    }).catch(function(err) {
-        $scope.alertError(err);
-    });
+    })
+  };
+
+  $scope.openLoginWithCredentialsPopup = function() {
+    $scope.data.project = $scope.selectedProject.id;
+    $scope.data.password = ""
+    return $ionicPopup.show({
+        template: `
+          <label>
+          ${$translate.instant('intro.join.username')}
+          </label>
+          <input ng-model="data.username">
+          <br>
+          <label>
+          ${$translate.instant('intro.join.password')}
+          </label>
+          <input type="password" ng-model="data.password">
+          <br>
+        `,
+        title: $translate.instant('intro.join.login-with-username') + '<br>',
+        scope: $scope,
+        buttons: [
+          {
+            text: '<b>' + $translate.instant('intro.join.confirm') + '</b>',
+            type: 'button-positive',
+            onTap: function(e) {
+              if (
+                !$scope.data.username
+                ||
+                !$scope.data.password
+              ) {
+                e.preventDefault();
+              } else {
+                return $scope.data;
+              }
+            }
+          },{
+            text: '<b>' + $translate.instant('intro.join.cancel') + '</b>',
+            type: 'button-stable',
+            onTap: function(e) {
+              return null;
+            }
+          }
+        ]
+    })
   };
 
   $scope.scanExisting = function() {
@@ -199,8 +265,8 @@ angular.module('emission.intro', ['emission.splash.startprefs',
       });
   };
 
-  $scope.login = function(token) {
-    window.cordova.plugins.OPCodeAuth.setOPCode("NpfgommeBlBnfNpe").then(function(opcode) {
+  $scope.login = function(config) {
+    window.cordova.plugins.OPCodeAuth.setOPCode(config.user_token).then(function(opcode) {
       // ionicToast.show(message, position, stick, time);
       // $scope.next();
       ionicToast.show(opcode, 'middle', false, 2500);
@@ -210,14 +276,14 @@ angular.module('emission.intro', ['emission.splash.startprefs',
         CommHelper.registerUser(function(successResult) {
           CommHelper.updateUser({
             creation_ts: new moment(),
-            project_id: $scope.selectedStudy.id,
-            email: $scope.email, // we might want not to have email on e-mission-server in order to anonymize data
+            project_id: $scope.selectedProject.id,
+            email: $scope.data.email, // we might want not to have email on e-mission-server in order to anonymize data
           });
-          if (!$scope.selectedStudy.user_email_mandatory) {
+          if (!$scope.selectedProject.user_email_mandatory) {
             $scope.startSurvey();
           }
-          UserCacheHelper.setEmail($scope.email);
-          UserCacheHelper.setCreationTime(new Date());
+          UserCacheHelper.setEmail(config.email);
+          UserCacheHelper.setCreationTime(config.date_joined);
           $scope.finish();
         }, function(errorResult) {
           $scope.alertError('User registration error', errorResult);
@@ -248,6 +314,7 @@ angular.module('emission.intro', ['emission.splash.startprefs',
   $scope.finish = function() {
     // this is not a promise, so we don't need to use .then
     StartPrefs.markConsented().then(function(response) {
+      $scope.choiceIsConfirmed = true;
       $ionicHistory.clearHistory();
       StartPrefs.markIntroDone();
       $scope.getIntroBox().slide(0);
@@ -294,9 +361,9 @@ angular.module('emission.intro', ['emission.splash.startprefs',
     });
   };
 
-  $scope.email = null;
-  $scope.studies = [];
-  $scope.selectedStudy = null;
+  $scope.data = {};
+  $scope.projects = [];
+  $scope.selectedProject = null;
   $scope.choiceIsConfirmed = false;
 
   const options = {
@@ -306,27 +373,48 @@ angular.module('emission.intro', ['emission.splash.startprefs',
   
   cordova.plugin.http.sendRequest("https://www.mamobilite.fabmobqc.ca/api/projects/", options,
   function(response) {
-    $scope.studies = response.data;
+    $scope.projects = response.data;
   }, function(error) {
-    Logger.log("Failed to fetch studies " + JSON.stringify(error));
+    Logger.log("Failed to fetch projects " + JSON.stringify(error));
   });
 
-  $scope.selectStudy = function(study) {
-    $scope.selectedStudy = study;
+  $scope.selectProject = function(project) {
+    $scope.selectedProject = project;
   }
 
-  $scope.confirmStudy = function() {
+  $scope.joinAnonymously = function() {
+    $scope.openJoinAnonymouslyPopup()
+      .then(DynamicConfig.loadConfigAnonymously)
+      .then($scope.login)
+      .catch(handleAuthentificationError);
+  }
 
-    const downloadURL = "https://www.mamobilite.fabmobqc.ca/api/projects/"+$scope.selectedStudy.id;
-    DynamicConfig.loadNewConfig(downloadURL)
-    .then(() => {
-      if ($scope.selectedStudy.user_email_mandatory) {
-        $scope.getUserEmail();
-      }
-      else {
-        $scope.loginNew();
-      }
-    })
+  $scope.joinWithUsername = function() {
+    $scope.openJoinWithCredentialsPopup()
+    .then(DynamicConfig.loadConfigWithCredentials)
+    .then($scope.login)
+    .catch(handleAuthentificationError);
+  }
+
+  $scope.loginWithUsername = function() {
+    $scope.openLoginWithCredentialsPopup()
+    .then(DynamicConfig.loadConfigWithLogin)
+    .then($scope.login)
+    .catch(handleAuthentificationError);
+  }
+
+  const handleAuthentificationError = (error) => {
+    const stringifiedError = JSON.stringify(error.error);
+    if (stringifiedError.includes('A user with that username already exists')) {
+      $scope.alertError($translate.instant('intro.join.username-already-exists'))
+    }
+    else if (
+      stringifiedError.includes('User email or password is incorrect')
+      ||
+      stringifiedError.includes('does not exist')
+    ) {
+      $scope.alertError($translate.instant('intro.join.invalid-credentials'))
+    }
   }
 
     $scope.name_field = `name_${$translate.use() === 'fr' ? 'fr' : 'en'}`;

@@ -1,5 +1,6 @@
 'use strict';
 
+
 angular.module('emission.config.dynamic', ['emission.plugin.logger', 'emission.splash.localnotify'])
 .factory('DynamicConfig', function($http, $ionicPlatform,
         $window, $state, $rootScope, $timeout, Logger, LocalNotify) {
@@ -39,20 +40,15 @@ angular.module('emission.config.dynamic', ['emission.plugin.logger', 'emission.s
         }
     }
 
-    var readConfigFromServer = function(downloadUrl) {
+    var readConfigFromServer = function(downloadUrl, options) {
         Logger.log("Downloading data from "+downloadUrl);
-
         return new Promise(function(resolve, reject) {
-            const options = {
-                method: 'get',
-                responseType: 'json'
-            }
             cordova.plugin.http.sendRequest(downloadUrl, options,
             function(response) {
                 Logger.log("Successfully found the "+downloadUrl+", result is " + JSON.stringify(response.data).substring(0,10));
                 const config = {
-                    "connectUrl": response.data.server_url,
                     ...response.data,
+                    "connectUrl": response.data.user_server ?? response.data.server_url,
                     "aggregate_call_auth": "no_auth",
                     "android": {
                         "auth": {
@@ -90,30 +86,63 @@ angular.module('emission.config.dynamic', ['emission.plugin.logger', 'emission.s
             .catch((err) => Logger.displayError("Unable to read saved config", err));
     }
 
-    /**
-     * loadNewConfig download and load a new config from the server if it is a differ
-     * @param {} downloadUrl url of the config to load
-     * @returns {boolean} boolean representing whether the config was updated or not
-     */
-    dc.loadNewConfig = function (downloadUrl, existingVersion=null) {
-        return readConfigFromServer(downloadUrl).then((downloadedConfig) => {
-            if (downloadedConfig.version === existingVersion) {
-                Logger.log("UI_CONFIG: Not updating config because version is the same");
-                return Promise.resolve(false);
-            }
-            const storeConfigPromise = $window.cordova.plugins.BEMUserCache.putRWDocument(
-                CONFIG_PHONE_UI, downloadedConfig);
-            const logSuccess = (storeResults) => Logger.log("UI_CONFIG: Stored dynamic config successfully, result = "+JSON.stringify(storeResults));
-            // loaded new config, so it is both ready and changed
-            return storeConfigPromise.then(logSuccess)
-                .then(dc.saveAndNotifyConfigChanged(downloadedConfig))
-                .then(dc.saveAndNotifyConfigReady(downloadedConfig))
-                .then(() => {
-                    LocalNotify.setNotifications(downloadedConfig);
-                    return true;
-                })
-                .catch((storeError) => Logger.displayError("Error storing downloaded study configuration", storeError));
-        });
+    dc.loadNewConfig = function (downloadedConfig) {
+        const storeConfigPromise = $window.cordova.plugins.BEMUserCache.putRWDocument(
+            CONFIG_PHONE_UI, downloadedConfig);
+        const logSuccess = (storeResults) => Logger.log("UI_CONFIG: Stored dynamic config successfully, result = "+JSON.stringify(storeResults));
+        // loaded new config, so it is both ready and changed
+        return storeConfigPromise.then(logSuccess)
+            .then(dc.saveAndNotifyConfigChanged(downloadedConfig))
+            .then(dc.saveAndNotifyConfigReady(downloadedConfig))
+            .then(() => {
+                LocalNotify.setNotifications(downloadedConfig);
+                return true;
+            })
+            .catch((storeError) => Logger.displayError("Error storing downloaded study configuration", storeError));
+    }
+
+    dc.loadConfigAnonymously = async function(projectId) {
+        if (projectId === null) {
+            return
+        }
+        const downloadUrl = `https://www.mamobilite.fabmobqc.ca/api/get_project_cfg/${projectId}`
+        const options = {
+            method: 'get',
+            responseType: 'json'
+        }
+        const config = await readConfigFromServer(downloadUrl, options)
+        dc.loadNewConfig(config, config.version)
+        return config
+    }
+
+    dc.loadConfigWithCredentials= async function(data) {
+        if (data === null) {
+            return
+        }
+        const downloadUrl = "https://www.mamobilite.fabmobqc.ca/api/users/"
+        const options = {
+            method: 'post',
+            data: data,
+            responseType: 'json'
+        }
+        const config = await readConfigFromServer(downloadUrl, options)
+        dc.loadNewConfig(config)
+        return config
+    }
+
+    dc.loadConfigWithLogin= async function(data) {
+        if (data === null) {
+            return
+        }
+        const downloadUrl = "https://www.mamobilite.fabmobqc.ca/api/login/"
+        const options = {
+            method: 'POST',
+            data: data,
+            responseType: 'json'
+        }
+        const config = await readConfigFromServer(downloadUrl, options)
+        dc.loadNewConfig(config)
+        return config
     }
 
     dc.saveAndNotifyConfigReady = function(newConfig) {

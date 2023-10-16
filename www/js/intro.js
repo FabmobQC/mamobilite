@@ -188,6 +188,7 @@ angular.module('emission.intro', ['emission.splash.startprefs',
               ) {
                 e.preventDefault();
               } else {
+                $scope.data.username = $scope.data.username.toLowerCase();
                 return $scope.data;
               }
             }
@@ -232,6 +233,7 @@ angular.module('emission.intro', ['emission.splash.startprefs',
               ) {
                 e.preventDefault();
               } else {
+                $scope.data.username = $scope.data.username.toLowerCase();
                 return $scope.data;
               }
             }

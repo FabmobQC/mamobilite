@@ -32,6 +32,7 @@ angular.module('emission.main.diary.list',['ui-leaflet',
                                     SurveyOptions,
                                     UserCacheHelper,
                                     DynamicConfig,
+                                    SurveyLaunch,
     Config, ImperialConfig, PostTripManualMarker, nzTour, KVStore, Logger, UnifiedDataLoader, $ionicPopover, $translate) {
   console.log("controller DiaryListCtrl called");
   const DEFAULT_ITEM_HT = 335;
@@ -553,13 +554,14 @@ angular.module('emission.main.diary.list',['ui-leaflet',
     }
 
     $scope.startSurvey = function () {
+      console.log("cossin startSurvey", JSON.stringify($scope.survey))
       if (!$scope.survey) {
         return;
       }
-
       const appLanguage = $translate.use();
       const surveyUrl = $scope.survey.urls.find(({language}) => language === appLanguage) || $scope.survey.urls[0];
 
+      console.log('cossin surveyUrl', JSON.stringify(surveyUrl))
       if (!surveyUrl) {
         return;
       }
@@ -568,6 +570,7 @@ angular.module('emission.main.diary.list',['ui-leaflet',
         "fr": "DD/MM/YYYY",
         "en": "MMMM Do YYYY",
       };
+      console.log('cossin après')
 
       const formatting = formattings[appLanguage] || formattings["en"];
 
@@ -576,6 +579,7 @@ angular.module('emission.main.diary.list',['ui-leaflet',
       const formattedTripDate = diaryMoment.tz(configTimezone).format(formatting);
 
       const queryString = `?user_email=${$scope.email}&trip_date=${formattedTripDate}`;
+      console.log('cossin startstart')
       SurveyLaunch.startSurvey(surveyUrl.url + queryString);
     };
 

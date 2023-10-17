@@ -401,7 +401,12 @@
             "repeat-email": "Repeat email",
             "what-project": "What project are you participating in?",
             "username-already-exists": "Username already exists",
-            "invalid-credentials": "Invalid credentials. Please verify you have selected the correct project"
+            "invalid-credentials": "Invalid credentials. Please verify you have selected the correct project",
+            "permissions": "Permissions",
+            "permissions-are-required": "All permissions are mandatory if you wish to participate to a study.",
+            "permissions-can-be-verified": "You can check your app status anytime in the Profile tab.",
+            "permissions-ignore": "Ignore",
+            "permissions-fix": "Fix"
         }
     },
     "allow_background": {

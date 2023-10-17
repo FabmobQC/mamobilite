@@ -372,7 +372,12 @@
             "repeat-email": "Répétez votre adresse électronique",
             "what-project": "À quel projet participez-vous?",
             "username-already-exists": "Ce nom d'utilisateur existe déjà. Veuillez en choisir un autre.",
-            "invalid-credentials": "Identifiants invalides. Veuillez vérifier que vous avez sélectionné le bon projet."
+            "invalid-credentials": "Identifiants invalides. Veuillez vérifier que vous avez sélectionné le bon projet.",
+            "permissions": "Permissions",
+            "permissions-are-required": "Toutes les permissions sont obligatoires afin de participer à une étude.",
+            "permissions-can-be-verified": "Vous pouvez vérifier le status de l'application à tout moment dans l'onglet Profil.",
+            "permissions-ignore": "Ignorer",
+            "permissions-fix": "Corriger"
         }
     }
 }

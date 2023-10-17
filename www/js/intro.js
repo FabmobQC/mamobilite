@@ -419,5 +419,38 @@ angular.module('emission.intro', ['emission.splash.startprefs',
     }
   }
 
+  $scope.validatePermissions = (permissionsAreOk) => {
+    if (permissionsAreOk) {
+      $scope.next()
+    }
+    else {
+      $ionicPopup.show({
+        template: `
+          <p>
+            <b>${$translate.instant('intro.join.permissions-are-required')}</b>
+          </p>
+          <br>
+          <p>
+            ${$translate.instant('intro.join.permissions-can-be-verified')}
+          </p>
+        `,
+        title: $translate.instant('intro.join.permissions') + '<br>',
+        scope: $scope,
+        buttons: [
+          {
+            text: '<b>' + $translate.instant('intro.join.permissions-ignore') + '</b>',
+            type: 'button-stable',
+            onTap: () => $scope.next()
+          },{
+            text: '<b>' + $translate.instant('intro.join.permissions-fix') + '</b>',
+            type: 'button-positive',
+            onTap: function(e) {
+              return null;
+            }
+          }
+        ]
+      })
+    }
+  }
     $scope.name_field = `name_${$translate.use() === 'fr' ? 'fr' : 'en'}`;
 });

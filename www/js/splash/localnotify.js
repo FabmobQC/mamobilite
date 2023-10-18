@@ -120,8 +120,7 @@ angular.module('emission.splash.localnotify', ['emission.plugin.logger',
     // We might also want someday to update the config and remove notifications
     $window.cordova.plugins.notification.local.cancelAll();
 
-    const rawCreationTime = UserCacheHelper.getCreationTime();
-    const creationMoment = rawCreationTime ? moment(rawCreationTime) : new moment();
+    const creationMoment = moment(config.date_joined)
     const currentMoment = new moment();
 
     const onInstallNotifications = config.on_install_notifications;

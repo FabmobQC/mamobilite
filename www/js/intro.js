@@ -279,12 +279,12 @@ angular.module('emission.intro', ['emission.splash.startprefs',
           CommHelper.updateUser({
             creation_ts: new moment(),
             project_id: $scope.selectedProject.id,
-            email: $scope.data.email, // we might want not to have email on e-mission-server in order to anonymize data
+            email: config.user_email, // we might want not to have email on e-mission-server in order to anonymize data
           });
           if (!$scope.selectedProject.user_email_mandatory) {
             $scope.startSurvey();
           }
-          UserCacheHelper.setEmail(config.email);
+          UserCacheHelper.setEmail(config.user_email ?? '');
           UserCacheHelper.setCreationTime(config.date_joined);
           $scope.finish();
         }, function(errorResult) {

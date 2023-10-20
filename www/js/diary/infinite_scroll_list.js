@@ -673,8 +673,7 @@ angular.module('emission.main.diary.infscrolllist',['ui-leaflet',
         return moment(dateString, formatting);
       }
 
-      const offset = $window.device.platform.toLowerCase() === "android" ? 1 : 0; // displaying android notifications 1 hour earlier
-      const currentMoment = new moment().add(offset, "hours");
+      const currentMoment = new moment();
       const diaryMoment = moment(Timeline.data.currDay);
 
       if (diaryMoment.isAfter(currentMoment)) {

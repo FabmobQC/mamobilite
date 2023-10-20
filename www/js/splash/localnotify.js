@@ -136,8 +136,7 @@ angular.module('emission.splash.localnotify', ['emission.plugin.logger',
     dailyNotifications.forEach((notification) => {
       const creationDateClone = moment(creationDate); // moments are mutable
       const displayTime = moment.duration(notification.display_time)
-      const offset = $window.device.platform.toLowerCase() === "android" ? 1 : 0; // displaying android notifications 1 hour earlier
-      const displayMoment = creationDateClone.add(notification.day, "days").add(displayTime).subtract(offset, "hours");
+      const displayMoment = creationDateClone.add(notification.day, "days").add(displayTime)
       scheduleNotification(notification, currentMoment, displayMoment);
     });
   }

@@ -277,7 +277,7 @@ angular.module('emission.intro', ['emission.splash.startprefs',
       } else {
         CommHelper.registerUser(function(successResult) {
           CommHelper.updateUser({
-            creation_ts: new moment(),
+            creation_ts: config.date_joined,
             project_id: $scope.selectedProject.id,
             email: config.user_email, // we might want not to have email on e-mission-server in order to anonymize data
           });

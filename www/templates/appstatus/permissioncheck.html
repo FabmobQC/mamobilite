@@ -7,10 +7,10 @@
 <ion-list>
 <ion-item ng-repeat="locCheck in locChecks">
     <div class="row">
-        <div class="col-90" ng-class="locCheck.statusClass">{{locCheck.name}}</div>
+        <div class="col-90" ng-class="locCheck.statusClass" style="margin-bottom: 10px;">{{locCheck.name}}</div>
         <div class="col-10">{{locCheck.statusIcon}}</div>
     </div>
-    <div class="row item-text-wrap">{{locCheck.desc}}</div>
+    <div class="row item-text-wrap" style="margin-bottom: 10px;">{{locCheck.desc}}</div>
     <div class="row" ng-if="locCheck.statusClass === 'status-red'">
         <button class="button" ng-click="locCheck.fix()">Fix</button>
         &nbsp;
@@ -28,10 +28,10 @@
 <ion-list>
 <ion-item ng-repeat="fitnessCheck in fitnessChecks">
     <div class="row">
-        <div class="col-90" ng-class="fitnessCheck.statusClass">{{fitnessCheck.name}}</div>
+        <div class="col-90" ng-class="fitnessCheck.statusClass" style="margin-bottom: 10px;">{{fitnessCheck.name}}</div>
         <div class="col-10">{{fitnessCheck.statusIcon}}</div>
     </div>
-    <div class="row item-text-wrap">{{fitnessCheck.desc}}</div>
+    <div class="row item-text-wrap" style="margin-bottom: 10px;">{{fitnessCheck.desc}}</div>
     <div class="row" ng-if="fitnessCheck.statusClass === 'status-red'">
         <button class="button" ng-click="fitnessCheck.fix()">Fix</button>
         &nbsp;
@@ -48,10 +48,10 @@
 <ion-list>
 <ion-item ng-repeat="notificationCheck in notificationChecks">
     <div class="row">
-        <div class="col-90" ng-class="notificationCheck.statusClass">{{notificationCheck.name}}</div>
+        <div class="col-90" ng-class="notificationCheck.statusClass" style="margin-bottom: 10px;">{{notificationCheck.name}}</div>
         <div class="col-10">{{notificationCheck.statusIcon}}</div>
     </div>
-    <div class="row item-text-wrap">{{notificationCheck.desc}}</div>
+    <div class="row item-text-wrap" style="margin-bottom: 10px;">{{notificationCheck.desc}}</div>
     <div class="row" ng-if="notificationCheck.statusClass === 'status-red'">
         <button class="button" ng-click="notificationCheck.fix()">Fix</button>
         &nbsp;

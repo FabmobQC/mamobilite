@@ -212,10 +212,30 @@ controller("PermissionCheckControl", function($scope, $element, $attrs,
             return checkOrFix(locSettingsCheck, $window.cordova.plugins.BEMDataCollection.isValidLocationSettings,
                 $scope.recomputeLocStatus, showError=false);
         };
+        let didShowLocationPermission = false;
+        let showLocationPermission = function() {
+            return new Promise((resolve, reject) => {
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        didShowLocationPermission = true
+                        resolve('Permission granted'); 
+                    },
+                    function(error) {
+                        didShowLocationPermission = true
+                        if (error.code === error.PERMISSION_DENIED) {
+                            reject('Permission denied');
+                        } else {
+                            reject('Error in granting permission');
+                        }
+                    }
+                );
+            });
+        };
         let fixPerms = function() {
             console.log("fix and refresh location permissions");
-            return checkOrFix(locPermissionsCheck, $window.cordova.plugins.BEMDataCollection.fixLocationPermissions,
-                $scope.recomputeLocStatus, showError=true).then((error) => locPermissionsCheck.desc = error);
+            let fixFunction = didShowLocationPermission ? $window.cordova.plugins.BEMDataCollection.fixLocationPermissions : showLocationPermission;
+            return checkOrFix(locPermissionsCheck, fixFunction, $scope.recomputeLocStatus, true)
+                .then((error) => locPermissionsCheck.desc = error);
         };
         let checkPerms = function() {
             console.log("fix and refresh location permissions");

@@ -243,7 +243,7 @@ controller("PermissionCheckControl", function($scope, $element, $attrs,
                 $scope.recomputeLocStatus, showError=false);
         };
         var iOSSettingsDescTag = "intro.appstatus.locsettings.description.ios";
-        var iOSPermDescTag = "intro.appstatus.locperms.description.ios-gte-13";
+        var iOSPermDescTag = "";
         if($scope.osver < 13) {
             iOSPermDescTag = 'intro.appstatus.locperms.description.ios-lt-13';
         }
@@ -308,7 +308,7 @@ controller("PermissionCheckControl", function($scope, $element, $attrs,
   
         let fitnessPermissionsCheck = {
             name: $translate.instant("intro.appstatus.fitnessperms.name"),
-            desc: $translate.instant("intro.appstatus.fitnessperms.description.ios"),
+            desc: $translate.instant(""),
             fix: fixPerms,
             refresh: checkPerms
         }
@@ -328,9 +328,14 @@ controller("PermissionCheckControl", function($scope, $element, $attrs,
             return checkOrFix(appAndChannelNotificationsCheck, $window.cordova.plugins.BEMDataCollection.isValidShowNotifications,
                 $scope.recomputeNotificationStatus, showError=false);
         };
+
+        var notificationDescription = "intro.appstatus.notificationperms.description.android-enable";
+        if($scope.platform.toLowerCase() == "ios") {
+            notificationDescription = "";
+        }
         let appAndChannelNotificationsCheck = {
             name: $translate.instant("intro.appstatus.notificationperms.app-enabled-name"),
-            desc: $translate.instant("intro.appstatus.notificationperms.description.android-enable"),
+            desc: $translate.instant(notificationDescription),
             fix: fixPerms,
             refresh: checkPerms
         }

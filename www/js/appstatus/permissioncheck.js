@@ -267,6 +267,16 @@ controller("PermissionCheckControl", function($scope, $element, $attrs,
         refreshChecks($scope.locChecks, $scope.recomputeLocStatus);
     }
 
+    $scope.disableIOSLocationPermission = function(index) {
+        if ($scope.platform.toLowerCase() != "ios") {
+            return false;
+        }
+        // If location services are not enabled on the device, the request for
+        // location permissions will fail. The user must first enable location
+        // services on the device before we can request location permissions.
+        return index > 0 && !$scope.locChecks[index - 1].statusState;
+    }
+
     $scope.setupAndroidFitnessChecks = function(platform, version) {
         $scope.fitnessPermNeeded = ($scope.osver >= 10);
 

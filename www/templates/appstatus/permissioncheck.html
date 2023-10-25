@@ -11,13 +11,13 @@
         <div class="col-10">{{locCheck.statusIcon}}</div>
     </div>
     <div class="row item-text-wrap" style="margin-bottom: 10px;">{{locCheck.desc}}</div>
-    <div ng-if="disableButtonsOnIOS($index)">
+    <div ng-if="disableIOSLocationPermission($index)">
         <div class="row item-text-wrap" style="margin-bottom: 10px;">{{ 'intro.appstatus.locperms.description.ios-warning-disabled' | translate }}</div>
     </div>
     <div class="row" ng-if="locCheck.statusClass === 'status-red'">
-        <button class="button" ng-click="locCheck.fix()" ng-disabled="disableButtonsOnIOS($index)">Fix</button>
+        <button class="button" ng-click="locCheck.fix()" ng-disabled="disableIOSLocationPermission($index)">Fix</button>
         &nbsp;
-        <button class="button" ng-click="locCheck.refresh()" ng-disabled="disableButtonsOnIOS($index)">Refresh</button>
+        <button class="button" ng-click="locCheck.refresh()" ng-disabled="disableIOSLocationPermission($index)">Refresh</button>
     </div>
 </ion-item>
 </ion-list>

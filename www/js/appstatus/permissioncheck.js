@@ -215,20 +215,30 @@ controller("PermissionCheckControl", function($scope, $element, $attrs,
         let didShowLocationPermission = false;
         let showLocationPermission = function() {
             return new Promise((resolve, reject) => {
-                navigator.geolocation.getCurrentPosition(
-                    function(position) {
-                        didShowLocationPermission = true
-                        resolve('Permission granted'); 
-                    },
-                    function(error) {
-                        didShowLocationPermission = true
-                        if (error.code === error.PERMISSION_DENIED) {
-                            reject('Permission denied');
-                        } else {
-                            reject('Error in granting permission');
-                        }
+                cordova.plugins.diagnostic.requestLocationAuthorization((status) => {
+                    didShowLocationPermission = true;
+                    switch(status) {
+                        case cordova.plugins.diagnostic.permissionStatus.GRANTED:
+                            resolve('Permission granted');
+                            break;
+                        case cordova.plugins.diagnostic.permissionStatus.GRANTED_WHEN_IN_USE:
+                            // When requesting "Always" location permission, a response of GRANTED_WHEN_IN_USE indicates
+                            // the user selected "Allow Once".
+                            reject("On the app settings page, please select 'Always' and 'Precise' and return here to continue");
+                            break;
+                        case cordova.plugins.diagnostic.permissionStatus.DENIED:
+                        case cordova.plugins.diagnostic.permissionStatus.DENIED_ALWAYS:
+                            reject("On the app settings page, please select 'Always' and 'Precise' and return here to continue");
+                            break;
+                        default:
+                            reject("On the app settings page, please select 'Always' and 'Precise' and return here to continue");
+                            break;
                     }
-                );
+                }, (error) => {
+                    didShowLocationPermission = true;
+                    console.error("Error getting location authorization status: " + error);
+                    reject('Error in granting permission: ' + error);
+                }, cordova.plugins.diagnostic.locationAuthorizationMode.ALWAYS);
             });
         };
         let fixPerms = function() {

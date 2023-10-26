@@ -243,7 +243,9 @@ controller("PermissionCheckControl", function($scope, $element, $attrs,
         };
         let fixPerms = function() {
             console.log("fix and refresh location permissions");
-            let fixFunction = didShowLocationPermission ? $window.cordova.plugins.BEMDataCollection.fixLocationPermissions : showLocationPermission;
+            // for ios prior to 13, BEMDataCollection.fixLocationPermissions already shows the location permission alert
+            let useFixLocationPermissions = $scope.osver < 13 || didShowLocationPermission;
+            let fixFunction = useFixLocationPermissions ? $window.cordova.plugins.BEMDataCollection.fixLocationPermissions : showLocationPermission;
             return checkOrFix(locPermissionsCheck, fixFunction, $scope.recomputeLocStatus, true)
                 .then((error) => locPermissionsCheck.desc = error);
         };
@@ -278,7 +280,7 @@ controller("PermissionCheckControl", function($scope, $element, $attrs,
     }
 
     $scope.disableIOSLocationPermission = function(index) {
-        if ($scope.platform.toLowerCase() != "ios") {
+        if ($scope.platform.toLowerCase() != "ios" || $scope.osver < 13) {
             return false;
         }
         // If location services are not enabled on the device, the request for

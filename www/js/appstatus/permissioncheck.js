@@ -279,7 +279,7 @@ controller("PermissionCheckControl", function($scope, $element, $attrs,
                 $scope.recomputeLocStatus, showError=false);
         };
         var iOSSettingsDescTag = "intro.appstatus.locsettings.description.ios";
-        var iOSPermDescTag = "";
+        var iOSPermDescTag = "intro.appstatus.locperms.description.ios-gte-13";
         if($scope.osver < 13) {
             iOSPermDescTag = 'intro.appstatus.locperms.description.ios-lt-13';
         }

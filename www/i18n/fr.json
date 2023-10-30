@@ -310,7 +310,7 @@
                     "android-gte-11": "Sur la page des paramètres de l'application, choisissez l'autorisation 'Emplacement' et sélectionnez 'Autoriser tout le temps'",
                     "android-gte-12": "Sur la page des paramètres de l'application, choisissez l'autorisation 'Localisation' et sélectionnez 'Toujours autoriser'",
                     "ios-lt-13": "Veuillez sélectionner 'Toujours autoriser'",
-                    "ios-gte-13": "Veuillez sélectionner 'Toujours autoriser' Sur la page des paramètres de l'application, veuillez sélectionner 'Toujours' et 'Précis' et revenez ici pour continuer"
+                    "ios-gte-13": "Lorsque la demande d'autorisation de localisation apparaît, veuillez sélectionner 'Autoriser pendant l'utilisation de l'appli' dans la première alerte qui s'affiche. Dans l'alerte suivante, choisissez 'Changer pour Toujours Autoriser' afin d'assurer un accès continu à votre localisation."
                 }
             },
             "overall-fitness-name-android": "Activité physique",

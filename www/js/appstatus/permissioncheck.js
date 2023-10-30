@@ -213,17 +213,30 @@ controller("PermissionCheckControl", function($scope, $element, $attrs,
                 $scope.recomputeLocStatus, showError=false);
         };
         let didShowLocationPermission = false;
-        let showLocationPermission = function() {
+        // We will present two alerts for location permissions.
+        // The first alert is for the "When in use" permission,
+        // and the second alert is for the "Always" permission.
+        // This is because Apple's guidelines require us to request
+        // the "When in use" permission before requesting the "Always" permission.
+        let showLocationPermission = function(mode) {
             return new Promise((resolve, reject) => {
                 cordova.plugins.diagnostic.requestLocationAuthorization((status) => {
                     didShowLocationPermission = true;
                     switch(status) {
                         case cordova.plugins.diagnostic.permissionStatus.GRANTED:
                             resolve('Permission granted');
+                            // Permission for "Always" is granted from the second alert, so we need to refresh status.
+                            locPermissionsCheck.desc = "Permission granted";
+                            refreshChecks($scope.locChecks, $scope.recomputeLocStatus);
                             break;
                         case cordova.plugins.diagnostic.permissionStatus.GRANTED_WHEN_IN_USE:
-                            // When requesting "Always" location permission, a response of GRANTED_WHEN_IN_USE indicates
-                            // the user selected "Allow Once".
+                            // We need to update the status here in case the second alert will be shown.
+                            locPermissionsCheck.desc = "On the app settings page, please select 'Always' and 'Precise' and return here to continue";
+                            refreshChecks($scope.locChecks, $scope.recomputeLocStatus);
+                            if (mode === cordova.plugins.diagnostic.locationAuthorizationMode.WHEN_IN_USE) {
+                                // Now request the 'Always' permission
+                                return showLocationPermission(cordova.plugins.diagnostic.locationAuthorizationMode.ALWAYS);
+                            }
                             reject("On the app settings page, please select 'Always' and 'Precise' and return here to continue");
                             break;
                         case cordova.plugins.diagnostic.permissionStatus.DENIED:
@@ -238,16 +251,27 @@ controller("PermissionCheckControl", function($scope, $element, $attrs,
                     didShowLocationPermission = true;
                     console.error("Error getting location authorization status: " + error);
                     reject('Error in granting permission: ' + error);
-                }, cordova.plugins.diagnostic.locationAuthorizationMode.ALWAYS);
+                }, mode);
             });
         };
+
         let fixPerms = function() {
             console.log("fix and refresh location permissions");
-            // for ios prior to 13, BEMDataCollection.fixLocationPermissions already shows the location permission alert
-            let useFixLocationPermissions = $scope.osver < 13 || didShowLocationPermission;
-            let fixFunction = useFixLocationPermissions ? $window.cordova.plugins.BEMDataCollection.fixLocationPermissions : showLocationPermission;
-            return checkOrFix(locPermissionsCheck, fixFunction, $scope.recomputeLocStatus, true)
-                .then((error) => locPermissionsCheck.desc = error);
+
+            let shouldUsePlatformFix = $scope.osver < 13 || didShowLocationPermission;
+
+            let getFixFunction = () => {
+                if (shouldUsePlatformFix) {
+                    return $window.cordova.plugins.BEMDataCollection.fixLocationPermissions;
+                } else {
+                    return () => showLocationPermission(cordova.plugins.diagnostic.locationAuthorizationMode.WHEN_IN_USE);
+                }
+            }
+            let fixFunction = getFixFunction();
+            return checkOrFix(locPermissionsCheck, fixFunction, $scope.recomputeLocStatus, showError=true)
+                .then(error => {
+                    locPermissionsCheck.desc = error;
+                });
         };
         let checkPerms = function() {
             console.log("fix and refresh location permissions");

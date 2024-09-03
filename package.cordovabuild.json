@@ -7,7 +7,23 @@
     "type": "git",
     "url": "git+https://github.com/e-mission/e-mission-phone.git"
   },
+  "scripts": {
+    "build": "npx webpack --config webpack.prod.js && npx cordova build",
+    "build-dev": "npx webpack --config webpack.dev.js && npx cordova build",
+    "build-dev-android": "npx webpack --config webpack.dev.js && npx cordova build android",
+    "build-dev-ios": "npx webpack --config webpack.dev.js && npx cordova build ios",
+    "build-prod-android": "npx webpack --config webpack.prod.js && npx cordova build android",
+    "build-prod-ios": "npx webpack --config webpack.prod.js && npx cordova build ios",
+    "build-prod-android-release": "npx webpack --config webpack.prod.js && npx cordova build android --release"
+  },
   "devDependencies": {
+    "@babel/core": "^7.21.3",
+    "@babel/plugin-proposal-class-properties": "^7.18.6",
+    "@babel/plugin-proposal-object-rest-spread": "^7.20.7",
+    "@babel/preset-env": "^7.21.4",
+    "@babel/preset-flow": "^7.21.4",
+    "@babel/preset-react": "^7.18.6",
+    "@babel/preset-typescript": "^7.21.4",
     "@ionic/cli": "6.20.8",
     "@types/luxon": "^3.3.0",
     "@types/react": "~18.2.0",
@@ -51,7 +67,6 @@
         "ANDROID_HOST": " ",
         "ANDROID_PATHPREFIX": "/"
       },
-      "cordova-plugin-email-composer": {},
       "cordova-plugin-x-socialsharing": {
         "PHOTO_LIBRARY_ADD_USAGE_DESCRIPTION": "This app requires photo library access to share photos on social media.",
         "PHOTO_LIBRARY_USAGE_DESCRIPTION": "This app requires photo library access to share photos on social media."
@@ -111,8 +126,7 @@
     "cordova-plugin-em-serversync": "git+https://github.com/e-mission/cordova-server-sync.git#v1.3.3",
     "cordova-plugin-em-settings": "git+https://github.com/e-mission/cordova-connection-settings.git#v1.2.3",
     "cordova-plugin-em-unifiedlogger": "git+https://github.com/e-mission/cordova-unified-logger.git#v1.3.6",
-    "cordova-plugin-em-usercache": "git+https://github.com/e-mission/cordova-usercache.git#v1.1.5",
-    "cordova-plugin-email-composer": "git+https://github.com/katzer/cordova-plugin-email-composer.git#0.10.1",
+    "cordova-plugin-em-usercache": "git+https://github.com/e-mission/cordova-usercache.git#v1.1.9",
     "cordova-plugin-file": "8.0.0",
     "cordova-plugin-inappbrowser": "6.0.0",
     "cordova-plugin-ionic-keyboard": "2.2.0",
@@ -128,7 +142,27 @@
     "enketo-transformer": "^4.0.0",
     "fast-xml-parser": "^4.2.2",
     "fs-extra": "^9.0.1",
+    "humanize-duration": "^3.31.0",
+    "i18next": "^23.7.6",
+    "install": "^0.13.0",
     "klaw-sync": "^6.0.0",
-    "phonegap-plugin-barcodescanner": "git+https://github.com/phonegap/phonegap-plugin-barcodescanner#v8.1.0"
+    "leaflet": "^1.9.4",
+    "luxon": "^3.3.0",
+    "npm": "^9.6.3",
+    "phonegap-plugin-barcodescanner": "git+https://github.com/e-mission/phonegap-plugin-barcodescanner.git",
+    "prop-types": "^15.8.1",
+    "react": "~18.2.0",
+    "react-chartjs-2": "^5.2.0",
+    "react-dom": "~18.2.0",
+    "react-i18next": "^13.5.0",
+    "react-native-paper": "^5.11.0",
+    "react-native-paper-dates": "^0.18.12",
+    "react-native-safe-area-context": "^4.6.3",
+    "react-native-screens": "^3.22.0",
+    "react-native-vector-icons": "^9.2.0",
+    "react-native-web": "^0.19.7",
+    "react-native-web-webview": "^1.0.2",
+    "react-qr-code": "^2.0.11",
+    "shelljs": "^0.8.5"
   }
 }

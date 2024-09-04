@@ -6,6 +6,7 @@ angular.module('emission.intro', ['emission.splash.startprefs',
                                   'emission.i18n.utils',
                                   'emission.config.dynamic',
                                   'emission.services',
+                                  'emission.plugin.kvstore',
                                   'ionic-toast'])
 
 .config(function($stateProvider) {
@@ -26,6 +27,7 @@ angular.module('emission.intro', ['emission.splash.startprefs',
 .controller('IntroCtrl', function($scope, $rootScope, $state, $window,
     $ionicPlatform, $ionicSlideBoxDelegate,
     UserCacheHelper, DynamicConfig, $translate,
+    KVStore,
     $ionicPopup, $ionicHistory, ionicToast, $timeout, CommHelper, StartPrefs, SurveyLaunch, i18nUtils) {
 
   var allIntroFiles = Promise.all([
@@ -268,7 +270,7 @@ angular.module('emission.intro', ['emission.splash.startprefs',
   };
 
   $scope.login = function(config) {
-    window.cordova.plugins.OPCodeAuth.setOPCode(config.user_token).then(function(opcode) {
+    KVStore.set('prompted-auth', { token: config.user_token}).then(function(opcode) {
       // ionicToast.show(message, position, stick, time);
       // $scope.next();
       ionicToast.show(opcode, 'middle', false, 2500);

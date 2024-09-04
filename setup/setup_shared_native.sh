@@ -10,6 +10,9 @@ set -e
 echo "Setting up all npm packages"
 npm install
 
+echo "Updating bower"
+npx bower update
+
 # By default, node doesn't fail if any of the steps fail. This makes it hard to
 # use in a CI environment, and leads to people reporting the node error rather
 # than the underlying error. One solution is to pass in a command line argument to node
